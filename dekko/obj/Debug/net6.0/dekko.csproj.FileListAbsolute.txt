@@ -1,0 +1,15 @@
+C:\Users\Owner\Projects\dekko\dekko\obj\Debug\net6.0\dekko.csproj.AssemblyReference.cache
+C:\Users\Owner\Projects\dekko\dekko\obj\Debug\net6.0\dekko.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Owner\Projects\dekko\dekko\obj\Debug\net6.0\dekko.AssemblyInfoInputs.cache
+C:\Users\Owner\Projects\dekko\dekko\obj\Debug\net6.0\dekko.AssemblyInfo.cs
+C:\Users\Owner\Projects\dekko\dekko\obj\Debug\net6.0\dekko.csproj.CoreCompileInputs.cache
+C:\Users\Owner\Projects\dekko\dekko\obj\Debug\net6.0\dekko.genruntimeconfig.cache
+C:\Users\Owner\Projects\dekko\dekko\bin\Debug\net6.0\dk.exe
+C:\Users\Owner\Projects\dekko\dekko\bin\Debug\net6.0\dk.deps.json
+C:\Users\Owner\Projects\dekko\dekko\bin\Debug\net6.0\dk.runtimeconfig.json
+C:\Users\Owner\Projects\dekko\dekko\bin\Debug\net6.0\dk.dll
+C:\Users\Owner\Projects\dekko\dekko\bin\Debug\net6.0\dk.pdb
+C:\Users\Owner\Projects\dekko\dekko\obj\Debug\net6.0\dk.dll
+C:\Users\Owner\Projects\dekko\dekko\obj\Debug\net6.0\refint\dk.dll
+C:\Users\Owner\Projects\dekko\dekko\obj\Debug\net6.0\dk.pdb
+C:\Users\Owner\Projects\dekko\dekko\obj\Debug\net6.0\ref\dk.dll
