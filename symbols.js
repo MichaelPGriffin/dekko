@@ -1,13 +1,13 @@
 export const symbols = [
-  'STAG',
+  'GOOG',
   'ILMN',
   'BRK.B',
-  'DIS',
-  'JNJ',
+  'O',
+  'META',
   'NLY',
-  'PBCT',
+  'CITI',
   'QQQ',
   'SPY',
-  'QYLD',
-  'AME'
+  'DAL',
+  'PM'
 ];
