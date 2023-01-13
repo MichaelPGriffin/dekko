@@ -1,0 +1,28 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Program",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      // "program": "C:\\Users\\Owner\\Projects\\StockPriceTimeseries\\src\\main.js"
+
+      // Use this when revisiting stock market graph analysis project:
+      // "program": "C:\\Users\\Owner\\Projects\\StockGraphAnalysis\\main.js"
+
+      // Use this when revisiting graph analysis project using the newly create GraphTools dependency:
+      //"program": "C:\\Users\\Owner\\Projects\\GraphTools\\main.js"
+
+      // Use this as a generic driver project
+      //"program": "C:\\Users\\Owner\\Projects\\Driver\\main.js"
+
+      "program": "C:\\Users\\Owner\\Desktop\\delete-me.js"
+    }
+  ]
+}
