@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../StockPriceTimeseries"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "../StockGraphAnalysis"
+		}
+	],
+	"settings": {}
+}
