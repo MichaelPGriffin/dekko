@@ -1,4 +1,5 @@
-import { directoryPath, symbols } from './src/config.js';
+import { directoryPath } from './src/config.js';
+import { symbols } from '../symbols.js'; 
 import { Vertex } from './src/Vertex.js';
 import {
   initializeFullyConnectedGraph,
