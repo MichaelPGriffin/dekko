@@ -1,5 +1,5 @@
 import { batchSize, sleep } from '../config.js';
-import { symbols } from '../../symbols.js';
+import { symbols } from '../../symbols.mjs';
 import { getPriceHistories } from './priceHistoryJsonToCsv.js';
 
 const governedRequests = async (collection) => {
@@ -8,10 +8,12 @@ const governedRequests = async (collection) => {
     const symbolBatch = collection.slice(start, end);
     await getPriceHistories(symbolBatch);
 
-    if (end < collection.length) {
+    if (end <= collection.length) {
       await sleep();
     }
   }
-}
+};
 
-governedRequests(symbols).then(() => console.log('Downloads are complete.'));
+await governedRequests(symbols);
+
+console.log('Downloads are complete.');
