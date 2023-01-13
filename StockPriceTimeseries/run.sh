@@ -1,4 +1,6 @@
 #!/usr/bin/env sh
+rm -rf ./data/
+mkdir data
 rm -rf ./responses/
 mkdir responses
 node ./src/main.js 
