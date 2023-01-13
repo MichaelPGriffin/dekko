@@ -1,5 +1,5 @@
 import { batchSize, sleep } from '../config.js';
-import { symbols } from '../../symbols.mjs';
+import { symbols } from '../../symbols.js';
 import { getPriceHistories } from './priceHistoryJsonToCsv.js';
 
 const governedRequests = async (collection) => {
