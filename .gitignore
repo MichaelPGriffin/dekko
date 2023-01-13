@@ -50,3 +50,7 @@ Thumbs.db
 
 # VS Code
 .vs/
+.vscode/
+
+# Project-specific
+responses/
