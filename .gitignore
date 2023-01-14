@@ -54,6 +54,8 @@ Thumbs.db
 
 # Project-specific
 responses/
+symbols.js
 
 obj/
 bin/
+
