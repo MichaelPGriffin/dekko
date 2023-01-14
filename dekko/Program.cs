@@ -8,6 +8,7 @@ namespace dekko
         {
             string init = "init";
             string eval = "eval";
+            string fetch = "fetch";
 
             var validCommands = new HashSet<string> { init, eval };
 
@@ -38,6 +39,9 @@ namespace dekko
                     break;
                 case "eval":
                     Evaluate();
+                    break;
+                case "fetch":
+                    Fetch();
                     break;
             }
         }
@@ -74,6 +78,13 @@ namespace dekko
             }
 
             File.WriteAllText("C:\\Users\\Owner\\Projects\\dekko\\symbols.js", writer.ToString());
+        }
+
+        private static void Fetch()
+        {
+            // TODO: From here, call the `run.sh` script in the StockPriceTimeseries repo.
+            // Will eventually use a similar mechanism to run the graph-analysis tool too.
+            throw new NotImplementedException();
         }
     }
 }
