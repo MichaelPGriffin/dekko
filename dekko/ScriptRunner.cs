@@ -17,7 +17,7 @@ namespace dekko
             var startInfo = new ProcessStartInfo();
             startInfo.FileName = "C:\\Program Files\\Git\\bin\\sh.exe";
 
-            startInfo.Arguments = "C:\\Users\\Owner\\Projects\\dekko\\StockPriceTimeseries\\run.sh";
+            startInfo.Arguments = fullPath;
             startInfo.UseShellExecute = false;
             startInfo.RedirectStandardOutput = true;
             startInfo.RedirectStandardError = true;

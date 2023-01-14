@@ -56,7 +56,7 @@ namespace dekko
         }
 
         // TODO: Could generalize this to either initialize a new symbol file, or to
-        // append to an existing one.
+        // append to an existing one. Thinking a `refs` directory could be introduced.
         private static void Evaluate()
         {
             // TODO: Add error handling for bad inputs here.
@@ -82,10 +82,8 @@ namespace dekko
 
         private static void Fetch()
         {
-            // TODO: From here, call the `run.sh` script in the StockPriceTimeseries repo.
-            // Will eventually use a similar mechanism to run the graph-analysis tool too.
-            // var runner = new ScriptRunner("./C/Users/Owner/Projects/dekko/StockPriceTimeseries/run.sh");
-            var runner = new ScriptRunner("./run.sh");
+            // TODO: Implement a similar mechanism to run the graph-analysis tool too.
+            var runner = new ScriptRunner("C:\\Users\\Owner\\Projects\\dekko\\StockPriceTimeseries\\run.sh");
 
             runner.Start();
         }
