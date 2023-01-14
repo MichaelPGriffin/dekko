@@ -1,12 +1,15 @@
-﻿namespace dekko
+﻿using System.Text;
+
+namespace dekko
 {
     internal class Program
     {
         static void Main(string[] args)
         {
             string init = "init";
+            string eval = "eval";
 
-            var validCommands = new HashSet<string> { init };
+            var validCommands = new HashSet<string> { init, eval };
 
             if (args == null)
             {
@@ -33,6 +36,9 @@
                 case "init":
                     Initialize();
                     break;
+                case "eval":
+                    Evaluate();
+                    break;
             }
         }
 
@@ -44,5 +50,33 @@
             Console.WriteLine();
             Console.WriteLine("Initializing dekko repository");
         }
+
+        private static void Evaluate()
+        {
+            // TODO: Add error handling for bad inputs here.
+            Console.WriteLine("What symbols are you interested in?");
+            var symbolString = Console.ReadLine();
+
+            if ( string.IsNullOrWhiteSpace(symbolString))
+            {
+                Console.WriteLine("Invalid input.");
+                return;
+            }
+
+            var symbols = symbolString.Split(' ');
+            var writer = new SymbolWriter();
+
+            foreach(var symbol in symbols)
+            {
+                writer.Append(symbol);
+            }
+
+            Console.WriteLine("Writer result is:");
+            Console.WriteLine(writer.ToString());
+
+            File.WriteAllText("./symbols.js", writer.ToString());
+        }
+
+
     }
 }
