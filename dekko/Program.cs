@@ -1,12 +1,17 @@
-﻿namespace dekko
+﻿using System.Text;
+
+namespace dekko
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            string init = "init";
+            const string init = "init";
+            const string eval = "eval";
+            const string fetch = "fetch";
+            const string islands = "islands";
 
-            var validCommands = new HashSet<string> { init };
+            var validCommands = new HashSet<string> { init, eval, fetch, islands };
 
             if (args == null)
             {
@@ -30,8 +35,17 @@
 
             switch (command)
             {
-                case "init":
+                case init:
                     Initialize();
+                    break;
+                case eval:
+                    Evaluate();
+                    break;
+                case fetch:
+                    Fetch();
+                    break;
+                case islands:
+                    Islands();
                     break;
             }
         }
@@ -43,6 +57,53 @@
             Console.WriteLine("* * * Welcome to dekko!!!! * * *");
             Console.WriteLine();
             Console.WriteLine("Initializing dekko repository");
+        }
+
+        // TODO: Could generalize this to either initialize a new symbol file, or to
+        // append to an existing one. Thinking a `refs` directory could be introduced.
+        private static void Evaluate()
+        {
+            // TODO: Add error handling for bad inputs here.
+            Console.WriteLine("What symbols are you interested in?");
+            var symbolString = Console.ReadLine();
+
+            if ( string.IsNullOrWhiteSpace(symbolString))
+            {
+                Console.WriteLine("Invalid input.");
+                return;
+            }
+
+            var symbols = symbolString.Split(null);
+            var writer = new SymbolWriter();
+
+            foreach(var symbol in symbols)
+            {
+                writer.Append(symbol);
+            }
+
+            File.WriteAllText("C:\\Users\\Owner\\Projects\\dekko\\symbols.js", writer.ToString());
+        }
+
+        private static void Fetch()
+        {
+            // TODO: Implement a similar mechanism to run the graph-analysis tool too.
+            var application = "C:\\Program Files\\Git\\bin\\sh.exe";
+            var program = "C:\\Users\\Owner\\Projects\\dekko\\StockPriceTimeseries\\run.sh";
+            var runner = new ScriptRunner(application, program);
+
+            runner.Start();
+        }
+
+        private static void Islands()
+        {
+            var application = "C:\\Program Files\\nodejs\\node.exe";
+            var program = "C:\\Users\\Owner\\Projects\\dekko\\StockGraphAnalysis\\main.js";
+        
+            // TODO: Parameterize the island method so it doesn't just use a hardcoded island count.
+            // Would need to pass this into the JS layer. Currently it is set to 3.
+            var runner = new ScriptRunner(application, program);
+
+            runner.Start();
         }
     }
 }

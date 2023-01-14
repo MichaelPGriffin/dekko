@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "dekko": {
+      "commandName": "Project",
+      "commandLineArgs": "islands"
+    }
+  }
+}
