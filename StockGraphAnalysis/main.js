@@ -23,14 +23,15 @@ const graph = initializeFullyConnectedGraph(nodes, getEdgeWeight);
 
 // Can remove nodes if they violate some criteria.
 // For example, if price is outside of a certain range.
-const removalPredicate = vertex => vertex.Value[0] === 'A';
-const prunedGraph = pruneNodes(graph, removalPredicate);
-prunedGraph.forEach(v => console.log(v.Value));
+// const removalPredicate = vertex => vertex.Value[0] === 'A';
+// const prunedGraph = pruneNodes(graph, removalPredicate);
+// prunedGraph.forEach(v => console.log(v.Value));
+
 
 // TODO: Get some more data using the S&P 500 list and try
 // to understand if the results make any sense.
 // TODO: After completing the above, come up with plan for backtesting.
-let islands = discoverIslands(3, prunedGraph);
+let islands = discoverIslands(3, graph);
 console.log('The islands are:');
 islands.forEach(v => console.log(v.Value));
 

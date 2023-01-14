@@ -33,6 +33,7 @@ const  _writeToCsv = (symbol, data) => {
   const csvWriter = createObjectCsvWriter({
     path: `/Users/Owner/Projects/dekko/StockPriceTimeseries/responses/${symbol}.csv`,
     header: [
+      //TODO: Would be nice to omit headers entirely instead of using placeholder.
       { id: 'name', title: `${symbol}` }
     ]
   });

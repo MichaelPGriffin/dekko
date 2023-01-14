@@ -206,7 +206,8 @@ export const buildCorrelationDictionary = async (symbols, directory) => {
     const readDataAsync = promisify(readFile);
 
     return readDataAsync(targetFile, 'utf-8').then((data) => {
-      const rawValues = data.split('\n');
+      // Slice avoids the NaN value introduced from stock ticker as row header.
+      const rawValues = data.split('\n').slice(1);
 
       // Remove any trailing new line and convert values to numbers.
       return rawValues.filter(v => v !== '').map(v => Number(v));
