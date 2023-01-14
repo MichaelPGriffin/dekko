@@ -9,8 +9,9 @@ namespace dekko
             string init = "init";
             string eval = "eval";
             string fetch = "fetch";
+            string islands = "islands";
 
-            var validCommands = new HashSet<string> { init, eval, fetch };
+            var validCommands = new HashSet<string> { init, eval, fetch, islands };
 
             if (args == null)
             {
@@ -42,6 +43,9 @@ namespace dekko
                     break;
                 case "fetch":
                     Fetch();
+                    break;
+                case "islands":
+                    Islands();
                     break;
             }
         }
@@ -86,6 +90,10 @@ namespace dekko
             var runner = new ScriptRunner("C:\\Users\\Owner\\Projects\\dekko\\StockPriceTimeseries\\run.sh");
 
             runner.Start();
+        }
+        private static void Islands()
+        {
+            throw new NotImplementedException();
         }
     }
 }
