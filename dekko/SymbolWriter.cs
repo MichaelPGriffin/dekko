@@ -21,7 +21,7 @@ namespace dekko
 
         public void Append(string symbol)
         {
-            details.Enqueue(symbol);
+            details.Enqueue($"'{symbol}'");
             details.Enqueue(delimitor);
         }
 

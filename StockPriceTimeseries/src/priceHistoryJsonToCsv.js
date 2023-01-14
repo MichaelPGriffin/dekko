@@ -31,7 +31,7 @@ const _getPriceHistory = async stockSymbol => {
 
 const  _writeToCsv = (symbol, data) => {
   const csvWriter = createObjectCsvWriter({
-    path: `./responses/${symbol}.csv`,
+    path: `/Users/Owner/Projects/dekko/StockPriceTimeseries/responses/${symbol}.csv`,
     header: [
       { id: 'name', title: `${symbol}` }
     ]
