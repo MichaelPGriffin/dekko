@@ -96,7 +96,11 @@ namespace dekko
 
         private static void Islands()
         {
-            throw new NotImplementedException();
+            var application = "C:\\Program Files\\nodejs\\node.exe";
+            var program = "C:\\Users\\Owner\\Projects\\dekko\\StockGraphAnalysis\\main.js";
+            var runner = new ScriptRunner(application, program);
+
+            runner.Start();
         }
     }
 }
