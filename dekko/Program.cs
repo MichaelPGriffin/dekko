@@ -6,10 +6,10 @@ namespace dekko
     {
         static void Main(string[] args)
         {
-            string init = "init";
-            string eval = "eval";
-            string fetch = "fetch";
-            string islands = "islands";
+            const string init = "init";
+            const string eval = "eval";
+            const string fetch = "fetch";
+            const string islands = "islands";
 
             var validCommands = new HashSet<string> { init, eval, fetch, islands };
 
@@ -35,16 +35,16 @@ namespace dekko
 
             switch (command)
             {
-                case "init":
+                case init:
                     Initialize();
                     break;
-                case "eval":
+                case eval:
                     Evaluate();
                     break;
-                case "fetch":
+                case fetch:
                     Fetch();
                     break;
-                case "islands":
+                case islands:
                     Islands();
                     break;
             }
