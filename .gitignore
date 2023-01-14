@@ -54,6 +54,7 @@ Thumbs.db
 
 # Project-specific
 responses/
+data/
 symbols.js
 
 obj/
