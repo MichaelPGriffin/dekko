@@ -51,6 +51,8 @@ namespace dekko
             Console.WriteLine("Initializing dekko repository");
         }
 
+        // TODO: Could generalize this to either initialize a new symbol file, or to
+        // append to an existing one.
         private static void Evaluate()
         {
             // TODO: Add error handling for bad inputs here.
@@ -63,7 +65,7 @@ namespace dekko
                 return;
             }
 
-            var symbols = symbolString.Split(' ');
+            var symbols = symbolString.Split(null);
             var writer = new SymbolWriter();
 
             foreach(var symbol in symbols)
@@ -71,12 +73,7 @@ namespace dekko
                 writer.Append(symbol);
             }
 
-            Console.WriteLine("Writer result is:");
-            Console.WriteLine(writer.ToString());
-
             File.WriteAllText("./symbols.js", writer.ToString());
         }
-
-
     }
 }

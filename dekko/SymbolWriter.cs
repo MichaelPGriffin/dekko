@@ -6,35 +6,47 @@ namespace dekko
     {
         public SymbolWriter()
         {
-            prefix = "export const symbols = [\n";
-            delimitor = ",\n";
-            suffix = "];\n\n";
-            stringBuilder = new StringBuilder();
-            stringBuilder.Append(prefix);
+            prefix = "export const symbols = [";
+            delimitor = ",";
+            suffix = "];";
+            details = new Queue<string>();
+            details.Enqueue(prefix);
         }
 
-        private string prefix;
-        private string delimitor;
-        private string suffix;
-        private StringBuilder stringBuilder;
+        private readonly string prefix;
+        private readonly string delimitor;
+        private readonly string suffix;
+        private string? result;
+        private readonly Queue<string> details;
 
         public void Append(string symbol)
         {
-            stringBuilder.Append($"\t{symbol}");
-            stringBuilder.Append(delimitor);
+            details.Enqueue(symbol);
+            details.Enqueue(delimitor);
         }
 
         public override string ToString()
         {
-            if (stringBuilder.Length <= 1)
+            if (result != null)
+            {
+                return result;
+            }
+
+            if (details.Count <= 1)
             {
                 throw new InvalidOperationException();
             }
 
-            stringBuilder.Remove(stringBuilder.Length - delimitor.Length, delimitor.Length);
-            stringBuilder.Append(suffix);
+            var stringBuilder = new StringBuilder();
+            while (details.Count > 1)
+            {
+                stringBuilder.Append(details.Dequeue());
+            }
 
-            return stringBuilder.ToString();
+            stringBuilder.Append(suffix);
+            result = stringBuilder.ToString();
+
+            return result;
         }
     }
 }
