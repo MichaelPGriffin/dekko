@@ -10,7 +10,7 @@ namespace dekko
             string eval = "eval";
             string fetch = "fetch";
 
-            var validCommands = new HashSet<string> { init, eval };
+            var validCommands = new HashSet<string> { init, eval, fetch };
 
             if (args == null)
             {
@@ -84,7 +84,10 @@ namespace dekko
         {
             // TODO: From here, call the `run.sh` script in the StockPriceTimeseries repo.
             // Will eventually use a similar mechanism to run the graph-analysis tool too.
-            throw new NotImplementedException();
+            // var runner = new ScriptRunner("./C/Users/Owner/Projects/dekko/StockPriceTimeseries/run.sh");
+            var runner = new ScriptRunner("./run.sh");
+
+            runner.Start();
         }
     }
 }
