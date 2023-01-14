@@ -73,7 +73,7 @@ namespace dekko
                 writer.Append(symbol);
             }
 
-            File.WriteAllText("./symbols.js", writer.ToString());
+            File.WriteAllText("C:\\Users\\Owner\\Projects\\dekko\\symbols.js", writer.ToString());
         }
     }
 }
