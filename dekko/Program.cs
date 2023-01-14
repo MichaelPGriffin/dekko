@@ -87,10 +87,13 @@ namespace dekko
         private static void Fetch()
         {
             // TODO: Implement a similar mechanism to run the graph-analysis tool too.
-            var runner = new ScriptRunner("C:\\Users\\Owner\\Projects\\dekko\\StockPriceTimeseries\\run.sh");
+            var application = "C:\\Program Files\\Git\\bin\\sh.exe";
+            var program = "C:\\Users\\Owner\\Projects\\dekko\\StockPriceTimeseries\\run.sh";
+            var runner = new ScriptRunner(application, program);
 
             runner.Start();
         }
+
         private static void Islands()
         {
             throw new NotImplementedException();

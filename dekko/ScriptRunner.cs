@@ -12,12 +12,12 @@ namespace dekko
 {
     internal class ScriptRunner
     {
-        public ScriptRunner(string fullPath)
+        public ScriptRunner(string applicationPath, string programPath)
         {
             var startInfo = new ProcessStartInfo();
-            startInfo.FileName = "C:\\Program Files\\Git\\bin\\sh.exe";
+            startInfo.FileName = applicationPath;
 
-            startInfo.Arguments = fullPath;
+            startInfo.Arguments = programPath;
             startInfo.UseShellExecute = false;
             startInfo.RedirectStandardOutput = true;
             startInfo.RedirectStandardError = true;
