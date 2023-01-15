@@ -8,6 +8,7 @@ namespace dekko
         static void Main(string[] args)
         {
             const string help = "help";
+            const string roster = "roster";
             const string eval = "eval";
             const string fetch = "fetch";
             const string islands = "islands";
@@ -41,6 +42,9 @@ namespace dekko
                     case help:
                         About();
                         break;
+                    case roster:
+                        Roster();
+                        break;
                     case eval:
                         Evaluate();
                         break;
@@ -58,13 +62,16 @@ namespace dekko
             }
         }
 
-        //
-        //
         private static void About()
         {
             Console.WriteLine("* * * Welcome to dekko!!!! * * *");
             Console.WriteLine();
             Console.WriteLine("More info coming soon.");
+        }
+
+        private static void Roster()
+        {
+            throw new NotImplementedException();
         }
 
         // TODO: Could generalize this to either initialize a new symbol file, or to
