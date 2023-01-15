@@ -25,5 +25,3 @@ if (!targetIslandCount || Number.isNaN(targetIslandCount) || targetIslandCount <
 const islands = discoverIslands(targetIslandCount, graph);
 console.log('The islands are:');
 islands.forEach(v => console.log(v.Value));
-
-console.log();
