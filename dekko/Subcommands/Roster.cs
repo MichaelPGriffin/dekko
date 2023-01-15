@@ -10,12 +10,14 @@ namespace dekko.Subcommands
 {
     internal static class Roster
     {
+        private static readonly string RosterPath = @"C:\\Users\\Owner\\Projects\\dekko\\.refs\\roster";
+
         public static void Execute(string[] args)
         {
             CheckParameterValidity(args);
 
             var command = args[1];
-            string symbol = args.Length > 1 ? args[2] : string.Empty;
+            string symbol = args.Length > 2 ? args[2] : string.Empty;
 
             switch (command)
             {
@@ -44,10 +46,8 @@ namespace dekko.Subcommands
             }
         }
 
-        public static void Add(string symbol)
-        {
-            throw new NotImplementedException();
-        }
+        public async static Task Add(string symbol) =>
+            await File.AppendAllTextAsync(RosterPath, $"{symbol}\n");
 
         public static void Remove(string symbol)
         {
@@ -59,9 +59,7 @@ namespace dekko.Subcommands
             throw new NotImplementedException();
         }
 
-        public static void Clear()
-        {
-            throw new NotImplementedException();
-        }
+        public static async Task Clear() =>
+            await File.WriteAllTextAsync(RosterPath, string.Empty);
     }
 }
