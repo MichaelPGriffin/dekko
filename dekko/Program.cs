@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace dekko
 {
@@ -6,12 +7,12 @@ namespace dekko
     {
         static void Main(string[] args)
         {
-            const string init = "init";
+            const string help = "help";
             const string eval = "eval";
             const string fetch = "fetch";
             const string islands = "islands";
 
-            var validCommands = new HashSet<string> { init, eval, fetch, islands };
+            var validCommands = new HashSet<string> { help, eval, fetch, islands };
 
             if (args == null)
             {
@@ -21,7 +22,7 @@ namespace dekko
 
             if (args.Length == 0)
             {
-                Console.WriteLine("args is empty");
+                Console.WriteLine("Invalid input. Type 'dekko help'");
                 return;
             }
 
@@ -33,30 +34,37 @@ namespace dekko
                 return;
             }
 
-            switch (command)
+            try
             {
-                case init:
-                    Initialize();
-                    break;
-                case eval:
-                    Evaluate();
-                    break;
-                case fetch:
-                    Fetch();
-                    break;
-                case islands:
-                    Islands();
-                    break;
+                switch (command)
+                {
+                    case help:
+                        About();
+                        break;
+                    case eval:
+                        Evaluate();
+                        break;
+                    case fetch:
+                        Fetch();
+                        break;
+                    case islands:
+                        Islands(args);
+                        break;
+                }
+            } catch(Exception ex)
+            {
+                Console.WriteLine("Error:");
+                Console.Write(ex.Message);
             }
         }
 
         //
         //
-        private static void Initialize()
+        private static void About()
         {
             Console.WriteLine("* * * Welcome to dekko!!!! * * *");
             Console.WriteLine();
-            Console.WriteLine("Initializing dekko repository");
+            Console.WriteLine("More info coming soon.");
         }
 
         // TODO: Could generalize this to either initialize a new symbol file, or to
@@ -67,9 +75,9 @@ namespace dekko
             Console.WriteLine("What symbols are you interested in?");
             var symbolString = Console.ReadLine();
 
-            if ( string.IsNullOrWhiteSpace(symbolString))
+            if (string.IsNullOrWhiteSpace(symbolString))
             {
-                Console.WriteLine("Invalid input.");
+                Console.WriteLine("Invalid input. Type 'dekko help'");
                 return;
             }
 
@@ -94,14 +102,26 @@ namespace dekko
             runner.Start();
         }
 
-        private static void Islands()
+        private static void Islands(string[] args)
         {
+            if (args == null || args.Length < 2)
+            {
+                throw new ArgumentException("Island count must be specified");
+            }
+
+            string? islandCount = args[1];
             var application = "C:\\Program Files\\nodejs\\node.exe";
-            var program = "C:\\Users\\Owner\\Projects\\dekko\\StockGraphAnalysis\\main.js";
-        
+            var program = "C:\\Users\\Owner\\Projects\\dekko\\StockGraphAnalysis\\islands.js";
+            
+            var invalidInput = !int.TryParse(islandCount, out int _);
+            if (invalidInput)
+            {
+                throw new ArgumentException($"Unexpected non-numeric argument: {islandCount}");
+            }
+
             // TODO: Parameterize the island method so it doesn't just use a hardcoded island count.
             // Would need to pass this into the JS layer. Currently it is set to 3.
-            var runner = new ScriptRunner(application, program);
+            var runner = new ScriptRunner(application, program, islandCount);
 
             runner.Start();
         }
