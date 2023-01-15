@@ -6,12 +6,14 @@ namespace dekko
     {
         static void Main(string[] args)
         {
-            const string init = "init";
+            const string help = "help";
             const string eval = "eval";
             const string fetch = "fetch";
             const string islands = "islands";
 
-            var validCommands = new HashSet<string> { init, eval, fetch, islands };
+            var validCommands = new HashSet<string> { help, eval, fetch, islands };
+
+            Console.WriteLine();
 
             if (args == null)
             {
@@ -21,7 +23,7 @@ namespace dekko
 
             if (args.Length == 0)
             {
-                Console.WriteLine("args is empty");
+                Console.WriteLine("Invalid input. Type 'dekko help'");
                 return;
             }
 
@@ -35,8 +37,8 @@ namespace dekko
 
             switch (command)
             {
-                case init:
-                    Initialize();
+                case help:
+                    About();
                     break;
                 case eval:
                     Evaluate();
@@ -52,11 +54,11 @@ namespace dekko
 
         //
         //
-        private static void Initialize()
+        private static void About()
         {
             Console.WriteLine("* * * Welcome to dekko!!!! * * *");
             Console.WriteLine();
-            Console.WriteLine("Initializing dekko repository");
+            Console.WriteLine("More info coming soon.");
         }
 
         // TODO: Could generalize this to either initialize a new symbol file, or to
@@ -67,9 +69,9 @@ namespace dekko
             Console.WriteLine("What symbols are you interested in?");
             var symbolString = Console.ReadLine();
 
-            if ( string.IsNullOrWhiteSpace(symbolString))
+            if (string.IsNullOrWhiteSpace(symbolString))
             {
-                Console.WriteLine("Invalid input.");
+                Console.WriteLine("Invalid input. Type 'dekko help'");
                 return;
             }
 
