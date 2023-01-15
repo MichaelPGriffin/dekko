@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace dekko
 {
@@ -12,8 +13,6 @@ namespace dekko
             const string islands = "islands";
 
             var validCommands = new HashSet<string> { help, eval, fetch, islands };
-
-            Console.WriteLine();
 
             if (args == null)
             {
@@ -35,20 +34,27 @@ namespace dekko
                 return;
             }
 
-            switch (command)
+            try
             {
-                case help:
-                    About();
-                    break;
-                case eval:
-                    Evaluate();
-                    break;
-                case fetch:
-                    Fetch();
-                    break;
-                case islands:
-                    Islands();
-                    break;
+                switch (command)
+                {
+                    case help:
+                        About();
+                        break;
+                    case eval:
+                        Evaluate();
+                        break;
+                    case fetch:
+                        Fetch();
+                        break;
+                    case islands:
+                        Islands(args);
+                        break;
+                }
+            } catch(Exception ex)
+            {
+                Console.WriteLine("Error:");
+                Console.Write(ex.Message);
             }
         }
 
@@ -96,14 +102,26 @@ namespace dekko
             runner.Start();
         }
 
-        private static void Islands()
+        private static void Islands(string[] args)
         {
+            if (args == null || args.Length < 2)
+            {
+                throw new ArgumentException("Island count must be specified");
+            }
+
+            string? islandCount = args[1];
             var application = "C:\\Program Files\\nodejs\\node.exe";
             var program = "C:\\Users\\Owner\\Projects\\dekko\\StockGraphAnalysis\\islands.js";
-        
+            
+            var invalidInput = !int.TryParse(islandCount, out int _);
+            if (invalidInput)
+            {
+                throw new ArgumentException($"Unexpected non-numeric argument: {islandCount}");
+            }
+
             // TODO: Parameterize the island method so it doesn't just use a hardcoded island count.
             // Would need to pass this into the JS layer. Currently it is set to 3.
-            var runner = new ScriptRunner(application, program);
+            var runner = new ScriptRunner(application, program, islandCount);
 
             runner.Start();
         }

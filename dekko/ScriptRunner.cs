@@ -12,12 +12,12 @@ namespace dekko
 {
     internal class ScriptRunner
     {
-        public ScriptRunner(string applicationPath, string programPath)
+        public ScriptRunner(string applicationPath, string programPath, string? arg0 = null)
         {
             var startInfo = new ProcessStartInfo();
             startInfo.FileName = applicationPath;
+            startInfo.Arguments = $"{programPath}{(arg0 != null ? " " + arg0 : string.Empty)}";
 
-            startInfo.Arguments = programPath;
             startInfo.UseShellExecute = false;
             startInfo.RedirectStandardOutput = true;
             startInfo.RedirectStandardError = true;
