@@ -46,8 +46,17 @@ namespace dekko.Subcommands
             }
         }
 
-        public async static Task Add(string symbol) =>
+        public async static Task Add(string symbol)
+        {
+            var symbols = await File.ReadAllLinesAsync(RosterPath);
+
+            if (symbols.Contains(symbol))
+            {
+                return;
+            }
+
             await File.AppendAllTextAsync(RosterPath, $"{symbol.ToUpperInvariant()}\n");
+        }
 
         public static async Task RemoveAsync(string symbol)
         {
