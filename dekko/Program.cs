@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text;
+using dekko.Subcommands;
 
 namespace dekko
 {
@@ -13,7 +14,7 @@ namespace dekko
             const string fetch = "fetch";
             const string islands = "islands";
 
-            var validCommands = new HashSet<string> { help, eval, fetch, islands };
+            var validCommands = new HashSet<string> { help, roster, eval, fetch, islands };
 
             if (args == null)
             {
@@ -43,7 +44,7 @@ namespace dekko
                         About();
                         break;
                     case roster:
-                        Roster();
+                        Roster(args);
                         break;
                     case eval:
                         Evaluate();
@@ -69,9 +70,9 @@ namespace dekko
             Console.WriteLine("More info coming soon.");
         }
 
-        private static void Roster()
+        private static void Roster(string[] args)
         {
-            throw new NotImplementedException();
+            Subcommands.Roster.Execute(args);
         }
 
         // TODO: Could generalize this to either initialize a new symbol file, or to
