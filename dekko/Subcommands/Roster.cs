@@ -12,26 +12,26 @@ namespace dekko.Subcommands
     {
         private static readonly string RosterPath = @"C:\\Users\\Owner\\Projects\\dekko\\.refs\\roster";
 
-        public static void Execute(string[] args)
+        public static async Task Execute(string[] args)
         {
             CheckParameterValidity(args);
 
             var command = args[1];
-            string symbol = args.Length > 2 ? args[2] : string.Empty;
+            string symbol = args.Length > 1 ? args[1] : string.Empty;
 
             switch (command)
             {
                 case "add":
-                    Add(symbol);
+                    await Add(symbol);
                     break;
                 case "rm":
-                    Remove(symbol);
+                    await RemoveAsync(symbol);
                     break;
                 case "ls":
                     List();
                     break;
                 case "clear":
-                    Clear();
+                    await Clear();
                     break;
                 default:
                     throw new ArgumentException($"Invalid parameter passed to `roster` method: {command}");
@@ -49,14 +49,21 @@ namespace dekko.Subcommands
         public async static Task Add(string symbol) =>
             await File.AppendAllTextAsync(RosterPath, $"{symbol}\n");
 
-        public static void Remove(string symbol)
+        public static async Task RemoveAsync(string symbol)
         {
-            throw new NotImplementedException();
+            var symbols = await File.ReadAllLinesAsync(RosterPath);
+            var filteredSymbols = symbols.Where(s => s != symbol);
+            await File.AppendAllLinesAsync(RosterPath, filteredSymbols);
         }
 
         public static void List()
         {
-            throw new NotImplementedException();
+            var symbols = File.ReadAllLines(RosterPath);
+
+            foreach(var symbol in symbols)
+            {
+                Console.WriteLine(symbol);
+            }
         }
 
         public static async Task Clear() =>

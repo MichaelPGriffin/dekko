@@ -70,10 +70,9 @@ namespace dekko
             Console.WriteLine("More info coming soon.");
         }
 
-        private static void Roster(string[] args)
-        {
-            Subcommands.Roster.Execute(args);
-        }
+        private static async Task Roster(string[] args) =>
+            await Subcommands.Roster.Execute(args);
+        
 
         // TODO: Could generalize this to either initialize a new symbol file, or to
         // append to an existing one. Thinking a `refs` directory could be introduced.
