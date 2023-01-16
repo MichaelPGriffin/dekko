@@ -65,7 +65,9 @@
                 throw new ArgumentException($"A branch with name \"{newBranchName}\" already exists");
             }
 
-            File.AppendAllLines(BranchesPath, new[] {newBranchName});
+            File.AppendAllLines(BranchesPath, new[] { newBranchName });
+
+            Switch(newBranchName);
         }
 
         public static void Remove(string[] args)
@@ -107,6 +109,11 @@
                 throw new ArgumentException($"No branch named \"{targetBranch}\" exists");
             }
 
+            Switch(targetBranch);
+        }
+
+        private static void Switch(string targetBranch)
+        {
             File.WriteAllLines(CurrentBranchPath, new[] { targetBranch });
         }
 
