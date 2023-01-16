@@ -26,6 +26,9 @@
                 case "rm":
                     Remove(args);
                     break;
+                case "switch":
+                    Switch(args);
+                    break;
                 default:
                     throw new NotImplementedException($"Unknown command: {command}");
             }
@@ -77,6 +80,20 @@
             var branches = File.ReadAllLines(BranchesPath);
             File.WriteAllLines(BranchesPath, branches.Where(branch => branch != targetBranchName));
             Console.WriteLine($"Deleted branch {targetBranchName}");
+        }
+
+        public static void Switch(string[] args)
+        {
+            CheckBranchNameValidity(args);
+            var targetBranch = args[2];
+            var branches = File.ReadAllLines(BranchesPath);
+
+            if (!branches.Contains(targetBranch))
+            {
+                throw new ArgumentException($"No branch named \"{targetBranch}\" exists");
+            }
+
+            File.WriteAllLines(CurrentBranchPath, new[] { targetBranch });
         }
 
         private static void CheckParameterValidity(string[] args)
