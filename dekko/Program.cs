@@ -73,10 +73,7 @@ namespace dekko
 
         private static async Task Roster(string[] args) =>
             await Subcommands.Roster.Execute(args);
-        
 
-        // TODO: Could generalize this to either initialize a new symbol file, or to
-        // append to an existing one. Thinking a `refs` directory could be introduced.
         private static async Task Config()
         {
             // TODO: Add error handling for bad inputs here.
@@ -107,9 +104,9 @@ namespace dekko
             File.WriteAllText("C:\\Users\\Owner\\Projects\\dekko\\symbols.js", writer.ToString());
         }
 
+        // TODO: Add ability to configure details for API requests, like the number of days of data.
         private static void Fetch()
         {
-            // TODO: Implement a similar mechanism to run the graph-analysis tool too.
             var application = "C:\\Program Files\\Git\\bin\\sh.exe";
             var program = "C:\\Users\\Owner\\Projects\\dekko\\StockPriceTimeseries\\run.sh";
             var runner = new ScriptRunner(application, program);
@@ -127,7 +124,7 @@ namespace dekko
             string? islandCount = args[1];
             var application = "C:\\Program Files\\nodejs\\node.exe";
             var program = "C:\\Users\\Owner\\Projects\\dekko\\StockGraphAnalysis\\islands.js";
-            
+
             var invalidInput = !int.TryParse(islandCount, out int _);
             if (invalidInput)
             {
