@@ -80,17 +80,21 @@ namespace dekko
         private static async Task Evaluate()
         {
             // TODO: Add error handling for bad inputs here.
-            Console.WriteLine("What symbols are you interested in?");
+            Console.WriteLine("What symbols are you interested in? Press ENTER to rely on `roster` file.");
             var symbolString = Console.ReadLine();
 
-            if (string.IsNullOrWhiteSpace(symbolString))
+            var rosterSymbols = await File.ReadAllLinesAsync(Constants.RosterPath);
+
+            if (string.IsNullOrWhiteSpace(symbolString) && rosterSymbols.Length == 0)
             {
-                Console.WriteLine("Invalid input. Type 'dekko help'");
+                Console.WriteLine("Symbols must be provided manually or via `roster` command. Type 'dekko help'");
                 return;
             }
 
-            var rosterSymbols = await File.ReadAllLinesAsync(Constants.RosterPath);
-            var symbols = symbolString.Split(null).Select(s => s.ToUpperInvariant());
+            var symbols = string.IsNullOrEmpty(symbolString) ?
+                Enumerable.Empty<string>() :
+                symbolString.Split(null).Select(s => s.ToUpperInvariant());
+
             var distinctSymbols = rosterSymbols.Concat(symbols).Distinct();
 
             var writer = new SymbolWriter();
