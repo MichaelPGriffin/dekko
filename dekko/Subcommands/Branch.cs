@@ -85,8 +85,15 @@
             }
 
             var branches = File.ReadAllLines(BranchesPath);
-            File.WriteAllLines(BranchesPath, branches.Where(branch => branch != targetBranchName));
-            Console.WriteLine($"Deleted branch {targetBranchName}");
+            if (branches.Contains(targetBranchName))
+            {
+
+                File.WriteAllLines(BranchesPath, branches.Where(branch => branch != targetBranchName));
+                Console.WriteLine($"Deleted branch {targetBranchName}");
+            } else
+            {
+                Console.WriteLine($"No branch named \"{targetBranchName}\" exists");
+            }
         }
 
         public static void Switch(string[] args)
