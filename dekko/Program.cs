@@ -107,7 +107,7 @@
         private static void Fetch()
         {
             var application = Constants.BashPath;
-            var program = $@"{Constants.RootPath}\StockPriceTimeseries\\run.sh";
+            var program = $@"{Constants.RootPath}\StockPriceTimeseries\run.sh";
             var runner = new ScriptRunner(application, program);
 
             runner.Start();
