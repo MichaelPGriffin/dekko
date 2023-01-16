@@ -9,8 +9,9 @@
             const string config = "config";
             const string fetch = "fetch";
             const string islands = "islands";
+            const string branch = "branch";
 
-            var validCommands = new HashSet<string> { help, roster, config, fetch, islands };
+            var validCommands = new HashSet<string> { help, roster, config, fetch, islands, branch };
 
             if (args == null)
             {
@@ -50,6 +51,9 @@
                         break;
                     case islands:
                         Islands(args);
+                        break;
+                    case branch:
+                        Branch(args);
                         break;
                 }
             } catch(Exception ex)
@@ -129,6 +133,11 @@
             var runner = new ScriptRunner(application, program, islandCount);
 
             runner.Start();
+        }
+
+        private static void Branch(string[] args)
+        {
+            Subcommands.Branch.Execute(args);
         }
     }
 }
