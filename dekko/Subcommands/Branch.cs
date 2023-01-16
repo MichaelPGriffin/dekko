@@ -20,6 +20,9 @@
                 case "ls":
                     List();
                     break;
+                case "new":
+                    New(args);
+                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -41,11 +44,11 @@
 
         public static void List()
         {
-            var branches = File.ReadAllLines(CurrentBranchPath);
+            var branches = File.ReadAllLines(BranchesPath);
+            var currentBranch = File.ReadAllLines(CurrentBranchPath).FirstOrDefault();
 
-            foreach(var branch in branches)
-            {
-                var currentBranch = File.ReadAllLines(CurrentBranchPath).FirstOrDefault();
+            foreach (var branch in branches)
+            {                
                 var currentIndicator = branch == currentBranch ? "* " : string.Empty;
                 Console.WriteLine($"{currentIndicator}{branch}");
             }
@@ -53,6 +56,24 @@
 
         public static void New(string[] args)
         {
+            if (args.Length < 3)
+            {
+                throw new ArgumentException("Missing branch name");
+            }
+
+            var newBranchName = args[2];
+            if (string.IsNullOrEmpty(newBranchName))
+            {
+                throw new ArgumentException("Branch name cannot be null or empty");
+            }
+
+            var branches = File.ReadAllLines(BranchesPath);
+            if (branches.Contains(newBranchName))
+            {
+                throw new ArgumentException($"A branch with name \"{newBranchName}\" already exists");
+            }
+
+            File.AppendAllLines(BranchesPath, new[] {newBranchName});
         }
 
         public static void Remove(string[] args)
