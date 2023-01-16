@@ -6,6 +6,8 @@
         
         private static readonly string BranchesPath = $@"{Constants.RefsPath}\branches";
 
+        private static readonly string InitialBranchName = "initial";
+
         public static void Execute(string[] args)
         {
             CheckParameterValidity(args);
@@ -75,6 +77,11 @@
             if (targetBranchName == currentBranchName)
             {
                 throw new ArgumentException("Cannot delete the current branch.");
+            }
+
+            if (targetBranchName == InitialBranchName)
+            {
+                throw new ArgumentException($"The \"{InitialBranchName}\" branch cannot be removed.");
             }
 
             var branches = File.ReadAllLines(BranchesPath);
