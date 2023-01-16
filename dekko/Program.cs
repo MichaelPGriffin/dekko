@@ -122,7 +122,7 @@ namespace dekko
             }
 
             string? islandCount = args[1];
-            var application = "C:\\Program Files\\nodejs\\node.exe";
+            var application = Constants.NodePath;
             var program = $@"{Constants.RootPath}\StockGraphAnalysis\\islands.js";
 
             var invalidInput = !int.TryParse(islandCount, out int _);
