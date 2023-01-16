@@ -10,14 +10,12 @@ namespace dekko.Subcommands
 {
     internal static class Roster
     {
-        private static readonly string RosterPath = @"C:\\Users\\Owner\\Projects\\dekko\\.refs\\roster";
-
         public static async Task Execute(string[] args)
         {
             CheckParameterValidity(args);
 
             var command = args[1];
-            string symbol = args.Length > 1 ? args[1] : string.Empty;
+            string symbol = args.Length > 2 ? args[2] : string.Empty;
 
             switch (command)
             {
@@ -48,26 +46,26 @@ namespace dekko.Subcommands
 
         public async static Task Add(string symbol)
         {
-            var symbols = await File.ReadAllLinesAsync(RosterPath);
+            var symbols = await File.ReadAllLinesAsync(Constants.RosterPath);
 
             if (symbols.Contains(symbol))
             {
                 return;
             }
 
-            await File.AppendAllTextAsync(RosterPath, $"{symbol.ToUpperInvariant()}\n");
+            await File.AppendAllTextAsync(Constants.RosterPath, $"{symbol.ToUpperInvariant()}\n");
         }
 
         public static async Task RemoveAsync(string symbol)
         {
-            var symbols = await File.ReadAllLinesAsync(RosterPath);
+            var symbols = await File.ReadAllLinesAsync(Constants.RosterPath);
             var filteredSymbols = symbols.Where(s => s != symbol);
-            await File.AppendAllLinesAsync(RosterPath, filteredSymbols);
+            await File.AppendAllLinesAsync(Constants.RosterPath, filteredSymbols);
         }
 
         public static void List()
         {
-            var symbols = File.ReadAllLines(RosterPath);
+            var symbols = File.ReadAllLines(Constants.RosterPath);
 
             foreach(var symbol in symbols)
             {
@@ -76,6 +74,6 @@ namespace dekko.Subcommands
         }
 
         public static async Task Clear() =>
-            await File.WriteAllTextAsync(RosterPath, string.Empty);
+            await File.WriteAllTextAsync(Constants.RosterPath, string.Empty);
     }
 }
