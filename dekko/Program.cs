@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 using System.Text;
 using dekko.Subcommands;
 
@@ -6,7 +7,7 @@ namespace dekko
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             const string help = "help";
             const string roster = "roster";
@@ -44,10 +45,10 @@ namespace dekko
                         About();
                         break;
                     case roster:
-                        Roster(args);
+                        await Roster(args);
                         break;
                     case eval:
-                        Evaluate();
+                        await Evaluate();
                         break;
                     case fetch:
                         Fetch();
@@ -76,7 +77,7 @@ namespace dekko
 
         // TODO: Could generalize this to either initialize a new symbol file, or to
         // append to an existing one. Thinking a `refs` directory could be introduced.
-        private static void Evaluate()
+        private static async Task Evaluate()
         {
             // TODO: Add error handling for bad inputs here.
             Console.WriteLine("What symbols are you interested in?");
@@ -88,10 +89,13 @@ namespace dekko
                 return;
             }
 
-            var symbols = symbolString.Split(null);
+            var rosterSymbols = await File.ReadAllLinesAsync(Constants.RosterPath);
+            var symbols = symbolString.Split(null).Select(s => s.ToUpperInvariant());
+            var distinctSymbols = rosterSymbols.Concat(symbols).Distinct();
+
             var writer = new SymbolWriter();
 
-            foreach(var symbol in symbols)
+            foreach(var symbol in distinctSymbols)
             {
                 writer.Append(symbol);
             }
