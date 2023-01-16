@@ -101,14 +101,14 @@ namespace dekko
                 writer.Append(symbol);
             }
 
-            File.WriteAllText("C:\\Users\\Owner\\Projects\\dekko\\symbols.js", writer.ToString());
+            File.WriteAllText($@"{Constants.RootPath}\symbols.js", writer.ToString());
         }
 
         // TODO: Add ability to configure details for API requests, like the number of days of data.
         private static void Fetch()
         {
             var application = "C:\\Program Files\\Git\\bin\\sh.exe";
-            var program = "C:\\Users\\Owner\\Projects\\dekko\\StockPriceTimeseries\\run.sh";
+            var program = $@"{Constants.RootPath}\StockPriceTimeseries\\run.sh";
             var runner = new ScriptRunner(application, program);
 
             runner.Start();
@@ -123,7 +123,7 @@ namespace dekko
 
             string? islandCount = args[1];
             var application = "C:\\Program Files\\nodejs\\node.exe";
-            var program = "C:\\Users\\Owner\\Projects\\dekko\\StockGraphAnalysis\\islands.js";
+            var program = $@"{Constants.RootPath}\StockGraphAnalysis\\islands.js";
 
             var invalidInput = !int.TryParse(islandCount, out int _);
             if (invalidInput)

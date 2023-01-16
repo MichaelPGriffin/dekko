@@ -8,6 +8,8 @@ namespace dekko
 {
     internal static class Constants
     {
-        public static readonly string RosterPath = @"C:\Users\Owner\Projects\dekko\.refs\roster";
+        public static readonly string RootPath = @"C:\Users\Owner\Projects\dekko";
+
+        public static readonly string RosterPath = $@"{RootPath}\.refs\roster";
     }
 }
