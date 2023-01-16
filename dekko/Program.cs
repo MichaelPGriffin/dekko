@@ -131,8 +131,6 @@ namespace dekko
                 throw new ArgumentException($"Unexpected non-numeric argument: {islandCount}");
             }
 
-            // TODO: Parameterize the island method so it doesn't just use a hardcoded island count.
-            // Would need to pass this into the JS layer. Currently it is set to 3.
             var runner = new ScriptRunner(application, program, islandCount);
 
             runner.Start();
