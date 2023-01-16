@@ -1,18 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 using System.Text;
+using dekko.Subcommands;
 
 namespace dekko
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             const string help = "help";
-            const string eval = "eval";
+            const string roster = "roster";
+            const string config = "config";
             const string fetch = "fetch";
             const string islands = "islands";
 
-            var validCommands = new HashSet<string> { help, eval, fetch, islands };
+            var validCommands = new HashSet<string> { help, roster, config, fetch, islands };
 
             if (args == null)
             {
@@ -41,8 +44,11 @@ namespace dekko
                     case help:
                         About();
                         break;
-                    case eval:
-                        Evaluate();
+                    case roster:
+                        await Roster(args);
+                        break;
+                    case config:
+                        await Config();
                         break;
                     case fetch:
                         Fetch();
@@ -58,8 +64,6 @@ namespace dekko
             }
         }
 
-        //
-        //
         private static void About()
         {
             Console.WriteLine("* * * Welcome to dekko!!!! * * *");
@@ -67,24 +71,32 @@ namespace dekko
             Console.WriteLine("More info coming soon.");
         }
 
-        // TODO: Could generalize this to either initialize a new symbol file, or to
-        // append to an existing one. Thinking a `refs` directory could be introduced.
-        private static void Evaluate()
+        private static async Task Roster(string[] args) =>
+            await Subcommands.Roster.Execute(args);
+
+        private static async Task Config()
         {
             // TODO: Add error handling for bad inputs here.
-            Console.WriteLine("What symbols are you interested in?");
+            Console.WriteLine("What symbols are you interested in? Press ENTER to rely on `roster` file.");
             var symbolString = Console.ReadLine();
 
-            if (string.IsNullOrWhiteSpace(symbolString))
+            var rosterSymbols = await File.ReadAllLinesAsync(Constants.RosterPath);
+
+            if (string.IsNullOrWhiteSpace(symbolString) && rosterSymbols.Length == 0)
             {
-                Console.WriteLine("Invalid input. Type 'dekko help'");
+                Console.WriteLine("Symbols must be provided manually or via `roster` command. Type 'dekko help'");
                 return;
             }
 
-            var symbols = symbolString.Split(null);
+            var symbols = string.IsNullOrEmpty(symbolString) ?
+                Enumerable.Empty<string>() :
+                symbolString.Split(null).Select(s => s.ToUpperInvariant());
+
+            var distinctSymbols = rosterSymbols.Concat(symbols).Distinct();
+
             var writer = new SymbolWriter();
 
-            foreach(var symbol in symbols)
+            foreach(var symbol in distinctSymbols)
             {
                 writer.Append(symbol);
             }
@@ -92,9 +104,9 @@ namespace dekko
             File.WriteAllText("C:\\Users\\Owner\\Projects\\dekko\\symbols.js", writer.ToString());
         }
 
+        // TODO: Add ability to configure details for API requests, like the number of days of data.
         private static void Fetch()
         {
-            // TODO: Implement a similar mechanism to run the graph-analysis tool too.
             var application = "C:\\Program Files\\Git\\bin\\sh.exe";
             var program = "C:\\Users\\Owner\\Projects\\dekko\\StockPriceTimeseries\\run.sh";
             var runner = new ScriptRunner(application, program);
@@ -112,7 +124,7 @@ namespace dekko
             string? islandCount = args[1];
             var application = "C:\\Program Files\\nodejs\\node.exe";
             var program = "C:\\Users\\Owner\\Projects\\dekko\\StockGraphAnalysis\\islands.js";
-            
+
             var invalidInput = !int.TryParse(islandCount, out int _);
             if (invalidInput)
             {
