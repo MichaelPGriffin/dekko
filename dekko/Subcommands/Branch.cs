@@ -3,6 +3,8 @@
     public static class Branch
     {
         private static readonly string CurrentBranchPath = $@"{Constants.RefsPath}\current-branch";
+        
+        private static readonly string BranchesPath = $@"{Constants.RefsPath}\branches";
 
         public static void Execute(string[] args)
         {
@@ -14,6 +16,9 @@
             {
                 case "current":
                     Current();
+                    break;
+                case "ls":
+                    List();
                     break;
                 default:
                     throw new NotImplementedException();
@@ -34,8 +39,16 @@
             Console.WriteLine(currentBranchName);
         }
 
-        public static void List(string[] args)
+        public static void List()
         {
+            var branches = File.ReadAllLines(CurrentBranchPath);
+
+            foreach(var branch in branches)
+            {
+                var currentBranch = File.ReadAllLines(CurrentBranchPath).FirstOrDefault();
+                var currentIndicator = branch == currentBranch ? "* " : string.Empty;
+                Console.WriteLine($"{currentIndicator}{branch}");
+            }
         }
 
         public static void New(string[] args)
