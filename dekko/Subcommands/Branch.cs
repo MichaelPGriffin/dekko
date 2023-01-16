@@ -36,13 +36,13 @@
             }
         }
 
-        public static void Current()
+        private static void Current()
         {
             var currentBranchName = File.ReadAllLines(CurrentBranchPath).FirstOrDefault();
             Console.WriteLine(currentBranchName);
         }
 
-        public static void List()
+        private static void List()
         {
             var branches = File.ReadAllLines(BranchesPath);
             var currentBranch = File.ReadAllLines(CurrentBranchPath).FirstOrDefault();
@@ -54,7 +54,7 @@
             }
         }
 
-        public static void New(string[] args)
+        private static void New(string[] args)
         {
             CheckBranchNameValidity(args);
             var newBranchName = args[2];
@@ -70,7 +70,7 @@
             Switch(newBranchName);
         }
 
-        public static void Remove(string[] args)
+        private static void Remove(string[] args)
         {
             CheckBranchNameValidity(args);
             var targetBranchName = args[2];
@@ -98,7 +98,7 @@
             }
         }
 
-        public static void Switch(string[] args)
+        private static void Switch(string[] args)
         {
             CheckBranchNameValidity(args);
             var targetBranch = args[2];
