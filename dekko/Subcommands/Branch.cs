@@ -101,7 +101,7 @@
             var branches = File.ReadAllLines(BranchesPath);
             if (branches.Contains(targetBranchName))
             {
-
+                Directory.Delete($@"{Constants.BranchStoragePath}\{targetBranchName}", recursive: true);
                 File.WriteAllLines(BranchesPath, branches.Where(branch => branch != targetBranchName));
                 Console.WriteLine($"Deleted branch {targetBranchName}");
             } else
