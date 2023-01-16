@@ -23,16 +23,11 @@
                 case "new":
                     New(args);
                     break;
+                case "rm":
+                    Remove(args);
+                    break;
                 default:
-                    throw new NotImplementedException();
-            }
-        }
-
-        private static void CheckParameterValidity(string[] args)
-        {
-            if (args == null || args.Length < 2)
-            {
-                throw new ArgumentException("Invalid parameters passed to `branch` method");
+                    throw new NotImplementedException($"Unknown command: {command}");
             }
         }
 
@@ -56,18 +51,10 @@
 
         public static void New(string[] args)
         {
-            if (args.Length < 3)
-            {
-                throw new ArgumentException("Missing branch name");
-            }
-
+            CheckBranchNameValidity(args);
             var newBranchName = args[2];
-            if (string.IsNullOrEmpty(newBranchName))
-            {
-                throw new ArgumentException("Branch name cannot be null or empty");
-            }
-
             var branches = File.ReadAllLines(BranchesPath);
+
             if (branches.Contains(newBranchName))
             {
                 throw new ArgumentException($"A branch with name \"{newBranchName}\" already exists");
@@ -78,6 +65,39 @@
 
         public static void Remove(string[] args)
         {
+            CheckBranchNameValidity(args);
+            var targetBranchName = args[2];
+
+            var currentBranchName = File.ReadAllLines(CurrentBranchPath).FirstOrDefault();
+            if (targetBranchName == currentBranchName)
+            {
+                throw new ArgumentException("Cannot delete the current branch.");
+            }
+
+            var branches = File.ReadAllLines(BranchesPath);
+            File.WriteAllLines(BranchesPath, branches.Where(branch => branch != targetBranchName));
+            Console.WriteLine($"Deleted branch {targetBranchName}");
+        }
+
+        private static void CheckParameterValidity(string[] args)
+        {
+            if (args == null || args.Length < 2)
+            {
+                throw new ArgumentException("Invalid parameters passed to `branch` method");
+            }
+        }
+
+        private static void CheckBranchNameValidity(string[] args)
+        {
+            if (args.Length < 3)
+            {
+                throw new ArgumentException("Missing branch name");
+            }
+
+            if (string.IsNullOrEmpty(args[2]))
+            {
+                throw new ArgumentException("Branch name cannot be null or empty");
+            }
         }
     }
 }
