@@ -11,11 +11,11 @@ namespace dekko
         {
             const string help = "help";
             const string roster = "roster";
-            const string eval = "eval";
+            const string config = "config";
             const string fetch = "fetch";
             const string islands = "islands";
 
-            var validCommands = new HashSet<string> { help, roster, eval, fetch, islands };
+            var validCommands = new HashSet<string> { help, roster, config, fetch, islands };
 
             if (args == null)
             {
@@ -47,8 +47,8 @@ namespace dekko
                     case roster:
                         await Roster(args);
                         break;
-                    case eval:
-                        await Evaluate();
+                    case config:
+                        await Config();
                         break;
                     case fetch:
                         Fetch();
@@ -77,7 +77,7 @@ namespace dekko
 
         // TODO: Could generalize this to either initialize a new symbol file, or to
         // append to an existing one. Thinking a `refs` directory could be introduced.
-        private static async Task Evaluate()
+        private static async Task Config()
         {
             // TODO: Add error handling for bad inputs here.
             Console.WriteLine("What symbols are you interested in? Press ENTER to rely on `roster` file.");
