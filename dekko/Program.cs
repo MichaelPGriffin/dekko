@@ -107,7 +107,7 @@ namespace dekko
         // TODO: Add ability to configure details for API requests, like the number of days of data.
         private static void Fetch()
         {
-            var application = "C:\\Program Files\\Git\\bin\\sh.exe";
+            var application = Constants.BashPath;
             var program = $@"{Constants.RootPath}\StockPriceTimeseries\\run.sh";
             var runner = new ScriptRunner(application, program);
 
