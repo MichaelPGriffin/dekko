@@ -36,6 +36,18 @@
             }
         }
 
+        public static string GetCurrentBranchName()
+        {
+            var branchName = File.ReadAllLines(CurrentBranchPath).FirstOrDefault();
+
+            if (string.IsNullOrEmpty(branchName))
+            {
+                throw new InvalidOperationException("Current branch name is null or empty. See `.refs/current-branch` file.");
+            }
+
+            return branchName;
+        }
+
         private static void Current()
         {
             var currentBranchName = File.ReadAllLines(CurrentBranchPath).FirstOrDefault();
