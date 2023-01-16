@@ -1,9 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Runtime.CompilerServices;
-using System.Text;
-using dekko.Subcommands;
-
-namespace dekko
+﻿namespace dekko
 {
     internal class Program
     {
