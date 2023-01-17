@@ -84,6 +84,16 @@
             File.AppendAllLines(BranchesPath, new[] { newBranchName });
 
             Switch(newBranchName);
+
+            // Clean up initial branch now that state is persisted on other branch.
+            File.WriteAllText(Constants.RosterPath, string.Empty);
+            File.WriteAllText($@"{Constants.RootPath}\StockPriceTimeseries\data\closing-prices.tsv", string.Empty);
+
+            // Delete .csv files.
+            foreach (var file in Directory.GetFiles($@"{Constants.RootPath}\StockPriceTimeseries\responses"))
+            {
+                File.Delete(file);
+            }
         }
 
         private static void Remove(string[] args)
