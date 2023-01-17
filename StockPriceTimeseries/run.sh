@@ -12,15 +12,5 @@ paste $PROJECT_PATH/StockPricetimeseries/responses/*.csv | awk '{print (NR==1?"#
 # Copy to branch directory
 if [ $BRANCH_NAME != "initial" ]
 then
-    # Create directory if it does not exist.
-    mkdir -p $PROJECT_PATH/.refs/branch-contents/    
-    
-    # Copy roster file to track state
-    cp $PROJECT_PATH/.refs/roster $PROJECT_PATH/.refs/branch-contents/$BRANCH_NAME
-
-    # Copy csvs
-    cp -r $PROJECT_PATH/StockPricetimeseries/responses/ $PROJECT_PATH/.refs/branch-contents/$BRANCH_NAME
-
-    # Copy tsv for convenient spreadsheeting
-    cp $PROJECT_PATH/StockPricetimeseries/data/closing-prices.tsv $PROJECT_PATH/.refs/branch-contents/$BRANCH_NAME
+    eval '$PROJECT_PATH/StockPriceTimeSeries/persist-branch.sh $BRANCH_NAME'
 fi
