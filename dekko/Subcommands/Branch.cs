@@ -77,6 +77,10 @@
                 throw new ArgumentException($"A branch with name \"{newBranchName}\" already exists");
             }
 
+            var branchPersistenceScript = $@"{Constants.RootPath}\StockPriceTimeseries\persist-branch.sh {newBranchName}";
+            var scriptRunner = new ScriptRunner(Constants.BashPath, branchPersistenceScript);
+            scriptRunner.Start();
+
             File.AppendAllLines(BranchesPath, new[] { newBranchName });
 
             Switch(newBranchName);
