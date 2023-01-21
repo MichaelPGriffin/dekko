@@ -1,9 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Runtime.CompilerServices;
-using System.Text;
-using dekko.Subcommands;
-
-namespace dekko
+﻿namespace dekko
 {
     internal class Program
     {
@@ -14,8 +9,9 @@ namespace dekko
             const string config = "config";
             const string fetch = "fetch";
             const string islands = "islands";
+            const string branch = "branch";
 
-            var validCommands = new HashSet<string> { help, roster, config, fetch, islands };
+            var validCommands = new HashSet<string> { help, roster, config, fetch, islands, branch };
 
             if (args == null)
             {
@@ -55,6 +51,9 @@ namespace dekko
                         break;
                     case islands:
                         Islands(args);
+                        break;
+                    case branch:
+                        Branch(args);
                         break;
                 }
             } catch(Exception ex)
@@ -101,15 +100,16 @@ namespace dekko
                 writer.Append(symbol);
             }
 
-            File.WriteAllText("C:\\Users\\Owner\\Projects\\dekko\\symbols.js", writer.ToString());
+            File.WriteAllText($@"{Constants.RootPath}\symbols.js", writer.ToString());
         }
 
         // TODO: Add ability to configure details for API requests, like the number of days of data.
         private static void Fetch()
         {
-            var application = "C:\\Program Files\\Git\\bin\\sh.exe";
-            var program = "C:\\Users\\Owner\\Projects\\dekko\\StockPriceTimeseries\\run.sh";
-            var runner = new ScriptRunner(application, program);
+            var application = Constants.BashPath;
+            var program = $@"{Constants.RootPath}\StockPriceTimeseries\run.sh";
+            var currentBranch = Subcommands.Branch.GetCurrentBranchName();
+            var runner = new ScriptRunner(application, program, currentBranch);
 
             runner.Start();
         }
@@ -122,8 +122,8 @@ namespace dekko
             }
 
             string? islandCount = args[1];
-            var application = "C:\\Program Files\\nodejs\\node.exe";
-            var program = "C:\\Users\\Owner\\Projects\\dekko\\StockGraphAnalysis\\islands.js";
+            var application = Constants.NodePath;
+            var program = $@"{Constants.RootPath}\StockGraphAnalysis\\islands.js";
 
             var invalidInput = !int.TryParse(islandCount, out int _);
             if (invalidInput)
@@ -131,11 +131,14 @@ namespace dekko
                 throw new ArgumentException($"Unexpected non-numeric argument: {islandCount}");
             }
 
-            // TODO: Parameterize the island method so it doesn't just use a hardcoded island count.
-            // Would need to pass this into the JS layer. Currently it is set to 3.
             var runner = new ScriptRunner(application, program, islandCount);
 
             runner.Start();
+        }
+
+        private static void Branch(string[] args)
+        {
+            Subcommands.Branch.Execute(args);
         }
     }
 }
