@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace dekko
+namespace dekko.Utilities
 {
     internal class ScriptRunner
     {
