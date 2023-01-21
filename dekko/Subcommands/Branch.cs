@@ -1,4 +1,6 @@
-﻿namespace dekko.Subcommands
+﻿using dekko.Utilities;
+
+namespace dekko.Subcommands
 {
     public static class Branch
     {

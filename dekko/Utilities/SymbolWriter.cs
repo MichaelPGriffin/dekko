@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace dekko
+namespace dekko.Utilities
 {
     internal class SymbolWriter
     {

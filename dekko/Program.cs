@@ -1,4 +1,6 @@
-﻿namespace dekko
+﻿using dekko.Utilities;
+
+namespace dekko
 {
     internal class Program
     {

@@ -1,30 +1,26 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
-namespace dekko
+namespace dekko.Utilities
 {
     internal class ScriptRunner
     {
         public ScriptRunner(string applicationPath, string programPath, string? arg0 = null)
         {
-            var startInfo = new ProcessStartInfo();
-            startInfo.FileName = applicationPath;
-            startInfo.Arguments = $"{programPath}{(arg0 != null ? " " + arg0 : string.Empty)}";
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = applicationPath,
+                Arguments = $"{programPath}{(arg0 != null ? " " + arg0 : string.Empty)}",
 
-            startInfo.UseShellExecute = false;
-            startInfo.RedirectStandardOutput = true;
-            startInfo.RedirectStandardError = true;
-            startInfo.CreateNoWindow = true;
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true
+            };
 
-            SpawnedProcess = new Process();
-            SpawnedProcess.StartInfo = startInfo;
+            SpawnedProcess = new Process
+            {
+                StartInfo = startInfo
+            };
         }
 
         public readonly Process SpawnedProcess;
