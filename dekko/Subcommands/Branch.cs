@@ -10,7 +10,7 @@ namespace dekko.Subcommands
 
         private static readonly string InitialBranchName = "initial";
 
-        public void Execute(string[] args)
+        public Task Execute(string[] args)
         {
             CheckParameterValidity(args);
 
@@ -36,6 +36,8 @@ namespace dekko.Subcommands
                 default:
                     throw new NotImplementedException($"Unknown command: {command}");
             }
+
+            return Task.CompletedTask;
         }
 
         public static string GetCurrentBranchName()

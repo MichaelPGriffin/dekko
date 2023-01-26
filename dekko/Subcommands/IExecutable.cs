@@ -8,6 +8,6 @@ namespace dekko.Subcommands
 {
     internal interface IExecutable
     {
-        void Execute(string[] args);
+        Task Execute(string[] args);
     }
 }
