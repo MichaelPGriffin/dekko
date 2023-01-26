@@ -60,7 +60,7 @@ namespace dekko
                         Branch(args);
                         break;
                     case subset:
-                        Subset(args);
+                        await Subset(args);
                         break;
                 }
             } catch(Exception ex)
@@ -152,9 +152,11 @@ namespace dekko
             branch.Execute(args);
         }
 
-        private static Task Subset()
+        private static Task Subset(string[] args)
         {
-            throw new NotImplementedException();
+
+            var subset = new Subcommands.Subset();
+            return subset.Execute(args);
         }
     }
 }
