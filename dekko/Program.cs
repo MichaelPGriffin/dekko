@@ -1,4 +1,5 @@
-﻿using dekko.Utilities;
+﻿using dekko.Subcommands;
+using dekko.Utilities;
 
 namespace dekko
 {
@@ -140,7 +141,8 @@ namespace dekko
 
         private static void Branch(string[] args)
         {
-            Subcommands.Branch.Execute(args);
+            var branch = new Branch();
+            branch.Execute(args);
         }
     }
 }
