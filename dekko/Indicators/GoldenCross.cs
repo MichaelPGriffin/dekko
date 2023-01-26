@@ -12,10 +12,10 @@
 
         public GoldenCross(decimal[] prices)
         {
-            SmallWindowSeries = MovingAverage(prices, SmallWindowLength);
+            LargeWindowSeries = MovingAverage(prices, LargeWindowLength);
 
-            LargeWindowSeries = MovingAverage(prices, LargeWindowLength)
-                .TakeLast(SmallWindowSeries.Count());
+            SmallWindowSeries = MovingAverage(prices, SmallWindowLength)
+                .TakeLast(LargeWindowSeries.Count());
         }
 
         private IEnumerable<decimal> SmallWindowSeries { get; set;}
