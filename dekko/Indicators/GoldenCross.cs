@@ -12,19 +12,19 @@
 
         public GoldenCross(decimal[] prices)
         {
-            SmallWindowMovingAverageSeries = MovingAverage(prices, SmallWindowLength);
+            SmallWindowSeries = MovingAverage(prices, SmallWindowLength);
 
-            LargeWindowMovingAverageSeries = MovingAverage(prices, LargeWindowLength)
-                .TakeLast(SmallWindowMovingAverageSeries.Count());
+            LargeWindowSeries = MovingAverage(prices, LargeWindowLength)
+                .TakeLast(SmallWindowSeries.Count());
         }
 
-        private IEnumerable<decimal> SmallWindowMovingAverageSeries { get; set;}
-        private IEnumerable<decimal> LargeWindowMovingAverageSeries { get; set; }
+        private IEnumerable<decimal> SmallWindowSeries { get; set;}
+        private IEnumerable<decimal> LargeWindowSeries { get; set; }
 
         public bool IsTrue()
         {
-            var a = SmallWindowMovingAverageSeries.Select(x => (double)x).ToArray();
-            var b = SmallWindowMovingAverageSeries.Select(x => (double)x).ToArray();
+            var a = SmallWindowSeries.Select(x => (double)x).ToArray();
+            var b = SmallWindowSeries.Select(x => (double)x).ToArray();
 
             return IsGoldenCross(a, b);
         }
