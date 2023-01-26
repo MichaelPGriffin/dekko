@@ -13,8 +13,9 @@ namespace dekko
             const string fetch = "fetch";
             const string islands = "islands";
             const string branch = "branch";
+            const string subset = "subset";
 
-            var validCommands = new HashSet<string> { help, roster, config, fetch, islands, branch };
+            var validCommands = new HashSet<string> { help, roster, config, fetch, islands, branch, subset };
 
             if (args == null)
             {
@@ -57,6 +58,9 @@ namespace dekko
                         break;
                     case branch:
                         Branch(args);
+                        break;
+                    case subset:
+                        Subset(args);
                         break;
                 }
             } catch(Exception ex)
@@ -146,6 +150,11 @@ namespace dekko
         {
             var branch = new Branch();
             branch.Execute(args);
+        }
+
+        private static Task Subset()
+        {
+            throw new NotImplementedException();
         }
     }
 }
