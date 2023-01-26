@@ -2,7 +2,7 @@
 
 namespace dekko.Subcommands
 {
-    public static class Branch
+    public class Branch: IExecutable
     {
         private static readonly string CurrentBranchPath = $@"{Constants.RefsPath}\current-branch";
         
@@ -10,7 +10,7 @@ namespace dekko.Subcommands
 
         private static readonly string InitialBranchName = "initial";
 
-        public static void Execute(string[] args)
+        public void Execute(string[] args)
         {
             CheckParameterValidity(args);
 
