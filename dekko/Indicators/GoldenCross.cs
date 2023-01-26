@@ -24,7 +24,7 @@
         public bool IsTrue()
         {
             var a = SmallWindowSeries.Select(x => (double)x).ToArray();
-            var b = SmallWindowSeries.Select(x => (double)x).ToArray();
+            var b = LargeWindowSeries.Select(x => (double)x).ToArray();
 
             return IsGoldenCross(a, b);
         }
