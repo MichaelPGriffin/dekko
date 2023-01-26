@@ -73,8 +73,11 @@ namespace dekko
             Console.WriteLine("More info coming soon.");
         }
 
-        private static async Task Roster(string[] args) =>
-            await Subcommands.Roster.Execute(args);
+        private static async Task Roster(string[] args)
+        {
+            var roster = new Roster();
+            await roster.Execute(args);
+        }
 
         private static async Task Config()
         {
