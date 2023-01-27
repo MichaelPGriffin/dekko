@@ -63,6 +63,19 @@ namespace dekko.Subcommands
 
             var percentage = Math.Round(100 * (trueCount / symbols.Count()), 2);
             Console.WriteLine($"{percentage}% of roster demonstrate golden-crosses");
+
+            if (percentage > 0 && percentage < 100)
+            {
+                Console.WriteLine("Would you like to exclude the negatives from consideration? Type \"yes\" to confirm.)");
+
+                var response = Console.ReadLine();
+                if (response == "yes")
+                {
+                    // RESUME HERE
+                    Console.WriteLine("This will be implemented soon!");
+                    throw new NotImplementedException();
+                }
+            }
         }
 
         private static void PrintSymbols(IEnumerable<string> symbols)
