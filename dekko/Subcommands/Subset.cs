@@ -21,7 +21,11 @@ namespace dekko.Subcommands
         // TODO: Consider deleting/hiding files in branch that don't make the golden cross indicator show TRUE.
         private static async Task PrintGoldenCrosDemonstrators()
         {
-            var symbols = new[] { "O" };
+            var responsesPath = @$"{Constants.BranchStoragePath}{Branch.GetCurrentBranchName()}\responses";
+            var symbols = Directory
+                .EnumerateFiles(responsesPath)
+                .Select(f => f.Split(@"\").Last())
+                .Select(f => f.Replace(".csv", string.Empty));
 
             foreach (var symbol in symbols)
             {
