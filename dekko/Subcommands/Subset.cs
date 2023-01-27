@@ -1,4 +1,5 @@
 ﻿using dekko.Indicators;
+using System.ComponentModel;
 
 namespace dekko.Subcommands
 {
@@ -28,6 +29,8 @@ namespace dekko.Subcommands
                 .Select(f => f.Replace(".csv", string.Empty));
 
             decimal trueCount = 0;
+            var postives = new List<string>();
+            var negatives = new List<string>();
 
             foreach (var symbol in symbols)
             {
@@ -38,18 +41,52 @@ namespace dekko.Subcommands
                 if (goldenCrossCandidate.IsTrue())
                 {
                     trueCount++;
-                    status = "is a";
+                    postives.Add(symbol);
                 }
                 else
                 {
-                    status = "is not a";
+                    negatives.Add(symbol);
                 }
+            }
 
-                Console.WriteLine($"The symbol {symbol} {status} golden cross");
+            if (postives.Count() > 0)
+            {
+                Console.WriteLine("The following symbols display golden crosses:");
+                PrintSymbols(postives);
+            }
+
+            if (negatives.Count() > 0)
+            {
+                Console.WriteLine("The following symbols do not display golden crosses:");
+                PrintSymbols(negatives);
             }
 
             var percentage = Math.Round(100 * (trueCount / symbols.Count()), 2);
             Console.WriteLine($"{percentage}% of roster demonstrate golden-crosses");
+        }
+
+        private static void PrintSymbols(IEnumerable<string> symbols)
+        {
+            int element = 0;
+            var blankLine = "\n";
+            foreach (var symbol in symbols)
+            {
+                var delimiter = "\t";
+                element++;
+                if (element % 5 == 0)
+                {
+                    delimiter = blankLine;
+                }
+
+                if (element == symbols.Count())
+                {
+                    delimiter = string.Empty;
+                }
+
+                Console.Write($"{symbol}{delimiter}");
+            }
+
+            Console.WriteLine(blankLine);
         }
 
         private static async Task<decimal[]> GetSymbolTimeSeries(string symbol)
