@@ -1,4 +1,5 @@
-﻿using dekko.Utilities;
+﻿using dekko.Subcommands;
+using dekko.Utilities;
 
 namespace dekko
 {
@@ -12,8 +13,9 @@ namespace dekko
             const string fetch = "fetch";
             const string islands = "islands";
             const string branch = "branch";
+            const string subset = "subset";
 
-            var validCommands = new HashSet<string> { help, roster, config, fetch, islands, branch };
+            var validCommands = new HashSet<string> { help, roster, config, fetch, islands, branch, subset };
 
             if (args == null)
             {
@@ -57,6 +59,9 @@ namespace dekko
                     case branch:
                         Branch(args);
                         break;
+                    case subset:
+                        await Subset(args);
+                        break;
                 }
             } catch(Exception ex)
             {
@@ -72,8 +77,11 @@ namespace dekko
             Console.WriteLine("More info coming soon.");
         }
 
-        private static async Task Roster(string[] args) =>
-            await Subcommands.Roster.Execute(args);
+        private static async Task Roster(string[] args)
+        {
+            var roster = new Roster();
+            await roster.Execute(args);
+        }
 
         private static async Task Config()
         {
@@ -140,7 +148,15 @@ namespace dekko
 
         private static void Branch(string[] args)
         {
-            Subcommands.Branch.Execute(args);
+            var branch = new Branch();
+            branch.Execute(args);
+        }
+
+        private static Task Subset(string[] args)
+        {
+
+            var subset = new Subcommands.Subset();
+            return subset.Execute(args);
         }
     }
 }

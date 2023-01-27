@@ -1,8 +1,8 @@
 ﻿namespace dekko.Subcommands
 {
-    internal static class Roster
+    internal class Roster:IExecutable
     {
-        public static async Task Execute(string[] args)
+        public async Task Execute(string[] args)
         {
             CheckParameterValidity(args);
 
