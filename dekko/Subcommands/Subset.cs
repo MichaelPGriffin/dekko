@@ -20,7 +20,9 @@ namespace dekko.Subcommands
 
         private static async Task IdentifyGoldenCrossDemonstrators()
         {
-            var symbols = File.ReadAllLines(Constants.RosterPath).ToList();
+            var symbols = File.ReadAllLines(Constants.RosterPath)
+                .Distinct()
+                .ToList();
 
             decimal trueCount = 0;
             var postives = new List<string>();
