@@ -1,5 +1,4 @@
 ﻿using dekko.Indicators;
-using System.ComponentModel;
 
 namespace dekko.Subcommands
 {
@@ -12,21 +11,16 @@ namespace dekko.Subcommands
             switch (indicator)
             {
                 case "golden-cross":
-                    await PrintGoldenCrossDemonstrators();
+                    await IdentifyGoldenCrossDemonstrators();
                     break;
                 default:
                     throw new ArgumentException($"Unexpected indicator name {indicator}");
             }
         }
 
-        // TODO: Consider deleting/hiding files in branch that don't make the golden cross indicator show TRUE.
-        private static async Task PrintGoldenCrossDemonstrators()
+        private static async Task IdentifyGoldenCrossDemonstrators()
         {
-            var responsesPath = @$"{Constants.BranchStoragePath}{Branch.GetCurrentBranchName()}\responses";
-            var symbols = Directory
-                .EnumerateFiles(responsesPath)
-                .Select(f => f.Split(@"\").Last())
-                .Select(f => f.Replace(".csv", string.Empty));
+            var symbols = File.ReadAllLines(Constants.RosterPath).ToList();
 
             decimal trueCount = 0;
             var postives = new List<string>();
@@ -36,7 +30,6 @@ namespace dekko.Subcommands
             {
                 var timeSeries = await GetSymbolTimeSeries(symbol);
                 var goldenCrossCandidate = new GoldenCross(timeSeries);
-                string status;
 
                 if (goldenCrossCandidate.IsTrue())
                 {
@@ -49,13 +42,13 @@ namespace dekko.Subcommands
                 }
             }
 
-            if (postives.Count() > 0)
+            if (postives.Count > 0)
             {
                 Console.WriteLine("The following symbols display golden crosses:");
                 PrintSymbols(postives);
             }
 
-            if (negatives.Count() > 0)
+            if (negatives.Count > 0)
             {
                 Console.WriteLine("The following symbols do not display golden crosses:");
                 PrintSymbols(negatives);
@@ -71,9 +64,7 @@ namespace dekko.Subcommands
                 var response = Console.ReadLine();
                 if (response == "yes")
                 {
-                    // RESUME HERE
-                    Console.WriteLine("This will be implemented soon!");
-                    throw new NotImplementedException();
+                    await File.WriteAllLinesAsync(Constants.RosterPath, symbols.Where(s => !negatives.Contains(s)));
                 }
             }
         }
