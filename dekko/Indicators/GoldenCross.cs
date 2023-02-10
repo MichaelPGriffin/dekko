@@ -3,12 +3,12 @@
     /// <summary>
     /// This indicator is TRUE when a timeseries of prices has a 50 day moving average
     /// that is lower than the 200 day moving average, and then becomes greater than the
-    /// 200 day moving average.
+    /// 200 day moving average. (50 vs 200 is traditional, may reconfigure)
     /// </summary>
     internal class GoldenCross
     {
         private const int SmallWindowLength = 50;
-        private const int LargeWindowLength = 200;
+        private const int LargeWindowLength = 100;
 
         public GoldenCross(decimal[] prices)
         {
@@ -52,30 +52,30 @@
             return result;
         }
 
-        private static bool IsGoldenCross(double[] datapoints50DMA, double[] datapoints200DMA)
+        private static bool IsGoldenCross(double[] smallWindowMovingAvg, double[] largeWindowMovingAvg)
         {
-            if (datapoints50DMA == null || datapoints200DMA == null)
+            if (smallWindowMovingAvg == null || largeWindowMovingAvg == null)
             {
-                string message = $"Parameters `{nameof(datapoints50DMA)}` and `{nameof(datapoints200DMA)}` must both be non-null";
+                string message = $"Parameters `{nameof(smallWindowMovingAvg)}` and `{nameof(largeWindowMovingAvg)}` must both be non-null";
                 throw new NullReferenceException(message);
             }
 
-            if (datapoints50DMA.Length != datapoints200DMA.Length)
+            if (smallWindowMovingAvg.Length != largeWindowMovingAvg.Length)
             {
                 throw new InvalidOperationException();
             }
 
             int sign = 1;
-            for (int i = 0; i < datapoints50DMA.Length; i++)
+            for (int i = 0; i < smallWindowMovingAvg.Length; i++)
             {
                 // By construction these sequences should never have the same values.
-                if (i > 0 && datapoints50DMA[i] == datapoints200DMA[i] && datapoints50DMA[i - 1] == datapoints200DMA[i - 1])
+                if (i > 0 && smallWindowMovingAvg[i] == largeWindowMovingAvg[i] && smallWindowMovingAvg[i - 1] == largeWindowMovingAvg[i - 1])
                 {
                     return false;
                 }
 
-                var current50DMA = datapoints50DMA[i];
-                var current200DMA = datapoints200DMA[i];
+                var current50DMA = smallWindowMovingAvg[i];
+                var current200DMA = largeWindowMovingAvg[i];
 
                 // Encountered the crossover point?
                 if (sign == 1 && current50DMA - current200DMA > 0)

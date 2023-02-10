@@ -10,7 +10,7 @@ mkdir -p $PROJECT_PATH/.refs/branch-contents/$BRANCH_NAME
 cp $PROJECT_PATH/.refs/roster $PROJECT_PATH/.refs/branch-contents/$BRANCH_NAME/roster
 
 # Copy csvs
-cp -r $PROJECT_PATH/StockPricetimeseries/responses/ $PROJECT_PATH/.refs/branch-contents/$BRANCH_NAME/responses/
+cp -r $PROJECT_PATH/StockPricetimeseries/responses/ $PROJECT_PATH/.refs/branch-contents/$BRANCH_NAME/
 
 # Copy tsv for convenient spreadsheeting
 cp $PROJECT_PATH/StockPricetimeseries/data/closing-prices.tsv $PROJECT_PATH/.refs/branch-contents/$BRANCH_NAME/closing-prices.tsv

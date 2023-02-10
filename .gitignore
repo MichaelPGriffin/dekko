@@ -53,10 +53,14 @@ Thumbs.db
 .vscode/
 
 # Project-specific
-responses/
-data/
+responses/*
+data/*
 symbols.js
 .refs/roster
+.refs/*
+StockPriceTimeseries/data
+StockPriceTimeseries/responses
+future_considerations
 
 obj/
 bin/

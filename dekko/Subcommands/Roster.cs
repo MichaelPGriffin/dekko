@@ -23,6 +23,9 @@
                 case "clear":
                     await Clear();
                     break;
+                case "restore":
+                    await Restore();
+                    break;
                 default:
                     throw new ArgumentException($"Invalid parameter passed to `roster` method: {command}");
             }
@@ -67,5 +70,18 @@
 
         public static async Task Clear() =>
             await File.WriteAllTextAsync(Constants.RosterPath, string.Empty);
+
+        public static async Task Restore()
+        {
+            // Restore the roster using the contents of the current branch /responses folder.
+            var currentBranch = Branch.GetCurrentBranchName();
+            var symbols = Directory
+                .EnumerateFiles($@"{Constants.BranchStoragePath}\{currentBranch}\responses")
+                .Select(f => f.Split(@"\").Last())
+                .Select(f => f.Replace(".csv", string.Empty));
+
+            await File.WriteAllLinesAsync(Constants.RosterPath, symbols);
+            await File.WriteAllLinesAsync($@"{Constants.BranchStoragePath}\{currentBranch}\roster", symbols);
+        }
     }
 }

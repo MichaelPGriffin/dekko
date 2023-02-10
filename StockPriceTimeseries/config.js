@@ -1,7 +1,7 @@
 export const queryParameters = Object.freeze({
  'apikey': 'K7DBHWUB9MKLFAXCFAYYM8JXKTFXNKME',
  'frequencyType': 'daily',
- 'periodType': 'ytd'
+ 'periodType': 'year'
 });
 
 export const batchSize = 5;
