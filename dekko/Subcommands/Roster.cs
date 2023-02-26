@@ -41,7 +41,18 @@
 
         public async static Task Add(string symbol)
         {
-            var symbols = await File.ReadAllLinesAsync(Constants.RosterPath);
+            string[]? symbols;
+            try
+            {
+                symbols = await File.ReadAllLinesAsync(Constants.RosterPath);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Roster file was deleted. Re-initializing roster");
+                // Ensure the file exists if it was deleted (Sometimes this happens during dev).
+                File.Create(Constants.RosterPath);
+                symbols = await File.ReadAllLinesAsync(Constants.RosterPath);
+            }
 
             if (symbols.Contains(symbol))
             {

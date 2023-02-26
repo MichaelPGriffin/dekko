@@ -14,8 +14,9 @@ namespace dekko
             const string islands = "islands";
             const string branch = "branch";
             const string subset = "subset";
+            const string fundamentals = "fundamentals";
 
-            var validCommands = new HashSet<string> { help, roster, config, fetch, islands, branch, subset };
+            var validCommands = new HashSet<string> { help, roster, config, fetch, islands, branch, subset, fundamentals };
 
             if (args == null)
             {
@@ -61,6 +62,9 @@ namespace dekko
                         break;
                     case subset:
                         await Subset(args);
+                        break;
+                    case fundamentals:
+                        await Fundamentals(args);
                         break;
                 }
             } catch(Exception ex)
@@ -157,6 +161,11 @@ namespace dekko
 
             var subset = new Subset();
             return subset.Execute(args);
+        }
+
+        private static async Task Fundamentals(string[] args)
+        {
+            await new Fundamentals().Execute(args);
         }
     }
 }

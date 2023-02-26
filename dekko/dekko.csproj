@@ -8,4 +8,10 @@
     <AssemblyName>dekko</AssemblyName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.SecretsManager" Version="3.7.101.34" />
+    <PackageReference Include="RestSharp" Version="108.0.3" />
+    <PackageReference Include="System.Text.Json" Version="7.0.2" />
+  </ItemGroup>
+
 </Project>
