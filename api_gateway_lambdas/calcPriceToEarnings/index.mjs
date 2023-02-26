@@ -5,7 +5,7 @@ const secret = await getsecret('polygon-api-key');
 const { POLYGON_API_KEY } = secret;
 
 export const handler = async(event) => {
-    const { symbol, periodOffset } = event.queryStringParameters;
+    let { symbol, periodOffset } = event.queryStringParameters;
     periodOffset = Number.parseInt(periodOffset, 10);
 
     const noSymbol = !symbol;
