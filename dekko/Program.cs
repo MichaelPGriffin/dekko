@@ -155,7 +155,7 @@ namespace dekko
         private static Task Subset(string[] args)
         {
 
-            var subset = new Subcommands.Subset();
+            var subset = new Subset();
             return subset.Execute(args);
         }
     }
