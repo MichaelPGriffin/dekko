@@ -16,15 +16,22 @@ namespace dekko.Subcommands
             // TODO: pass in time period params.
             // Want ability to configure a range of of time for fundamentals.
             // Want relative return period to match this.
-            await RequestFundamentals();
+            // TODO: Ensure relative return request makes sense with respect to offset param.
+            // Seems like it should be a lagging indicator.
+            if (!int.TryParse(args[1], out int periodOffset))
+            {
+                throw new InvalidOperationException($"Unexpected period offset argument {args[1]}");
+            }
+
+            await RequestFundamentals(periodOffset);
         }
 
         private const char columnDelimiter = '\t';
         private const char lineDelimiter = '\n';
-        public static async Task RequestFundamentals()
+        public static async Task RequestFundamentals(int periodOffset)
         {
             var symbols = await RosterSymbols();
-            var metrics = MetricNames();
+            var metrics = MetricNames(periodOffset);
 
             var table = new StringBuilder();
             table.Append(columnDelimiter);
@@ -36,19 +43,19 @@ namespace dekko.Subcommands
                 table.Append(symbol);
                 table.Append(columnDelimiter);
 
-                table.Append(await GetMetricsForSymbol(metrics, symbol));
+                table.Append(await GetMetricsForSymbol(metrics, symbol, periodOffset));
                 table.Append(lineDelimiter);
             }
 
             Console.Write(table.ToString());
         }
 
-        private static async Task<string> GetMetricsForSymbol(IEnumerable<string> metrics, string symbol)
+        private static async Task<string> GetMetricsForSymbol(IEnumerable<string> metrics, string symbol, int periodOffset)
         {
             var requests = new List<Task<string>>();
             foreach (var metric in metrics)
             {
-                requests.Add(RequestMetric(symbol, metric));
+                requests.Add(RequestMetric(symbol, metric, periodOffset));
             }
 
             await Task.WhenAll(requests);
@@ -62,10 +69,10 @@ namespace dekko.Subcommands
             return string.Join(columnDelimiter, values);
         }
 
-        private static async Task<string> RequestMetric(string symbol, string metricName)
+        private static async Task<string> RequestMetric(string symbol, string metricName, int periodOffset)
         {
             var client = await ConfigureClient();
-            var request = ConfigureRequest(symbol, metricName, 0);
+            var request = ConfigureRequest(symbol, metricName, periodOffset);
             var response = await client.ExecuteAsync(request);
 
             if (string.IsNullOrEmpty(response.Content))
@@ -101,7 +108,11 @@ namespace dekko.Subcommands
         private static RestRequest ConfigureRequest(string symbol, string metricName, int endPeriodOffset = 0, int startPeriodOffset = 1)
         {
             string endpoint = $"/prod/stocks/fundamentals/{metricName}";
-            string queryString = $"symbol={symbol}&periodOffset={endPeriodOffset}&startPeriodOffset={startPeriodOffset}";
+
+            // TODO: Conditionally append this segment to query string if it's relevant to the metric
+            // e.g. the period over which relative return is to be calculated.
+            //&startPeriodOffset={startPeriodOffset}
+            string queryString = $"symbol={symbol}&periodOffset={endPeriodOffset}";
             string fullUrl = $"{endpoint}?{queryString}";
   
             var request = new RestRequest(fullUrl, Method.Get);
@@ -130,9 +141,10 @@ namespace dekko.Subcommands
         // Seems like the time-period details need to be settled first.
         private const string ReturnVersusIndex = "return-vs-index";
         
-        private static IEnumerable<string> MetricNames()
+        private static IEnumerable<string> MetricNames(int periodOffset)
         {
-            return new[]
+            var suffix = $"_{periodOffset}";
+            var metricNames = new[]
             {
                 DebtToEquity,
                 DividendPayoutRatio,
@@ -144,6 +156,8 @@ namespace dekko.Subcommands
                 PriceToSales,
                 ReturnOnEquity
             };
+
+            return metricNames.Select(name => $"{name}{suffix}");
         }
     }
 
