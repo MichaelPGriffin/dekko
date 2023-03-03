@@ -12,30 +12,34 @@ namespace dekko.Subcommands
     public class Fundamentals : IExecutable
     {
         public async Task Execute(string[] args)
-        {
-            // TODO: pass in time period params.
-            // Want ability to configure a range of of time for fundamentals.
-            // Want relative return period to match this.
+        {.
             // TODO: Ensure relative return request makes sense with respect to offset param.
             // Seems like it should be a lagging indicator.
-            if (!int.TryParse(args[1], out int periodOffset))
+            if (!int.TryParse(args[1], out int startPeriod))
             {
                 throw new InvalidOperationException($"Unexpected period offset argument {args[1]}");
             }
 
-            await RequestFundamentals(periodOffset);
+            if (!int.TryParse(args[2], out int endPeriod))
+            {
+                endPeriod = -1;
+            }
+
+            await RequestFundamentals(startPeriod, endPeriod);
         }
 
         private const char columnDelimiter = '\t';
         private const char lineDelimiter = '\n';
-        public static async Task RequestFundamentals(int periodOffset)
+        public static async Task RequestFundamentals(int startPeriodOffset, int endPeriodOffset = -1)
         {
+            endPeriodOffset = Math.Max(startPeriodOffset, endPeriodOffset);
+
             var symbols = await RosterSymbols();
-            var metrics = MetricNames(periodOffset);
+            var headers = MetricHeaders(startPeriodOffset, endPeriodOffset);
 
             var table = new StringBuilder();
             table.Append(columnDelimiter);
-            table.Append(string.Join(columnDelimiter, metrics));
+            table.Append(string.Join(columnDelimiter, headers));
             table.Append(lineDelimiter);
 
             foreach (var symbol in symbols)
@@ -43,19 +47,23 @@ namespace dekko.Subcommands
                 table.Append(symbol);
                 table.Append(columnDelimiter);
 
-                table.Append(await GetMetricsForSymbol(metrics, symbol, periodOffset));
+                table.Append(await GetMetricsForSymbol(symbol, startPeriodOffset, endPeriodOffset));
                 table.Append(lineDelimiter);
             }
 
             Console.Write(table.ToString());
         }
 
-        private static async Task<string> GetMetricsForSymbol(IEnumerable<string> metrics, string symbol, int periodOffset)
+        private static async Task<string> GetMetricsForSymbol(string symbol, int startPeriod, int endPeriod)
         {
             var requests = new List<Task<string>>();
+            var metrics = MetricNames();
             foreach (var metric in metrics)
             {
-                requests.Add(RequestMetric(symbol, metric, periodOffset));
+                for (int period = startPeriod; period <= endPeriod; period++)
+                {
+                    requests.Add(RequestMetric(symbol, metric, period));
+                }
             }
 
             await Task.WhenAll(requests);
@@ -90,10 +98,10 @@ namespace dekko.Subcommands
             return data.value.ToString();
         }
 
-        private static async Task<RestClient> ConfigureClient() 
+        private static async Task<RestClient> ConfigureClient()
         {
             string apiKey = await SecretsManager.GetFundamentalsApiKey();
-            
+
             var options = new RestClientOptions(Constants.FundamentalsBaseUrl)
             {
                 MaxTimeout = -1,
@@ -105,16 +113,16 @@ namespace dekko.Subcommands
             return client;
         }
 
-        private static RestRequest ConfigureRequest(string symbol, string metricName, int endPeriodOffset = 0, int startPeriodOffset = 1)
+        private static RestRequest ConfigureRequest(string symbol, string metricName, int startPeriodOffset = 0, int endPeriod = 0)
         {
             string endpoint = $"/prod/stocks/fundamentals/{metricName}";
 
-            // TODO: Conditionally append this segment to query string if it's relevant to the metric
+            // TODO: Conditionally append an endPeriod segment to query string if it's relevant to the metric
             // e.g. the period over which relative return is to be calculated.
-            //&startPeriodOffset={startPeriodOffset}
-            string queryString = $"symbol={symbol}&periodOffset={endPeriodOffset}";
+   
+            string queryString = $"symbol={symbol}&periodOffset={startPeriodOffset}";
             string fullUrl = $"{endpoint}?{queryString}";
-  
+
             var request = new RestRequest(fullUrl, Method.Get);
 
             return request;
@@ -140,11 +148,29 @@ namespace dekko.Subcommands
         // TODO: Configure details for wiring up relative return inclusion.
         // Seems like the time-period details need to be settled first.
         private const string ReturnVersusIndex = "return-vs-index";
-        
-        private static IEnumerable<string> MetricNames(int periodOffset)
+
+        private static IEnumerable<string> MetricHeaders(int startPeriodOffset, int endPeriodOffset)
         {
-            var suffix = $"_{periodOffset}";
-            var metricNames = new[]
+            var metricNames = MetricNames();
+            var headers = new List<string>();
+
+            for (int period = startPeriodOffset; period <= endPeriodOffset; period++)
+            {
+                var timePeriodColumns = metricNames.Select(name => $"{name}_{period}");
+                foreach(var column in timePeriodColumns)
+                {
+                    headers.Add(column);
+                }
+
+            }
+
+            return headers;
+        }
+
+
+        private static List<string> MetricNames()
+        {
+            return new List<string>
             {
                 DebtToEquity,
                 DividendPayoutRatio,
@@ -156,13 +182,12 @@ namespace dekko.Subcommands
                 PriceToSales,
                 ReturnOnEquity
             };
-
-            return metricNames.Select(name => $"{name}{suffix}");
         }
-    }
 
-    internal class FundametalMetric
-    {
-        public decimal value { get; set; }
+
+        internal class FundametalMetric
+        {
+            public decimal value { get; set; }
+        }
     }
 }

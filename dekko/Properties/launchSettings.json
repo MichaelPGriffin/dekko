@@ -2,7 +2,7 @@
   "profiles": {
     "dekko": {
       "commandName": "Project",
-      "commandLineArgs": "fundamentals 2"
+      "commandLineArgs": "fundamentals 1 2"
     }
   }
 }
