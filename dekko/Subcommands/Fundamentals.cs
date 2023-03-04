@@ -1,9 +1,5 @@
-﻿using dekko;
-using dekko.Utilities;
+﻿using dekko.Utilities;
 using RestSharp;
-using System;
-using System.Diagnostics.SymbolStore;
-using System.Dynamic;
 using System.Text;
 using System.Text.Json;
 
@@ -13,8 +9,12 @@ namespace dekko.Subcommands
     {
         public async Task Execute(string[] args)
         {
-            // TODO: Ensure relative return request makes sense with respect to offset param.
-            // Seems like it should be a lagging indicator.
+
+            if (args.Length == 0)
+            {
+                throw new InvalidOperationException($"The `fundamentals` command must be followed by `startPeriod` and `endPeriod` parameters");
+            }
+
             if (!int.TryParse(args[1], out int startPeriod))
             {
                 throw new InvalidOperationException($"Unexpected period offset argument {args[1]}");
