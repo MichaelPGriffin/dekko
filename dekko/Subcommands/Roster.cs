@@ -44,14 +44,14 @@
             string[]? symbols;
             try
             {
-                symbols = await File.ReadAllLinesAsync(Constants.RosterPath);
+                symbols = await File.ReadAllLinesAsync(ResourceIdentifiers.RosterPath());
             }
             catch (Exception)
             {
                 Console.WriteLine("Roster file was deleted. Re-initializing roster");
                 // Ensure the file exists if it was deleted (Sometimes this happens during dev).
-                File.Create(Constants.RosterPath);
-                symbols = await File.ReadAllLinesAsync(Constants.RosterPath);
+                File.Create(ResourceIdentifiers.RosterPath());
+                symbols = await File.ReadAllLinesAsync(ResourceIdentifiers.RosterPath());
             }
 
             if (symbols.Contains(symbol))
@@ -59,19 +59,19 @@
                 return;
             }
 
-            await File.AppendAllTextAsync(Constants.RosterPath, $"{symbol.ToUpperInvariant()}\n");
+            await File.AppendAllTextAsync(ResourceIdentifiers.RosterPath(), $"{symbol.ToUpperInvariant()}\n");
         }
 
         public static async Task RemoveAsync(string symbol)
         {
-            var symbols = await File.ReadAllLinesAsync(Constants.RosterPath);
+            var symbols = await File.ReadAllLinesAsync(ResourceIdentifiers.RosterPath());
             var filteredSymbols = symbols.Where(s => s != symbol);
-            await File.AppendAllLinesAsync(Constants.RosterPath, filteredSymbols);
+            await File.AppendAllLinesAsync(ResourceIdentifiers.RosterPath(), filteredSymbols);
         }
 
         public static void List()
         {
-            var symbols = File.ReadAllLines(Constants.RosterPath);
+            var symbols = File.ReadAllLines(ResourceIdentifiers.RosterPath());
 
             foreach(var symbol in symbols)
             {
@@ -80,19 +80,19 @@
         }
 
         public static async Task Clear() =>
-            await File.WriteAllTextAsync(Constants.RosterPath, string.Empty);
+            await File.WriteAllTextAsync(ResourceIdentifiers.RosterPath(), string.Empty);
 
         public static async Task Restore()
         {
             // Restore the roster using the contents of the current branch /responses folder.
             var currentBranch = Branch.GetCurrentBranchName();
             var symbols = Directory
-                .EnumerateFiles($@"{Constants.BranchStoragePath}\{currentBranch}\responses")
+                .EnumerateFiles($@"{ResourceIdentifiers.BranchStoragePath}\{currentBranch}\responses")
                 .Select(f => f.Split(@"\").Last())
                 .Select(f => f.Replace(".csv", string.Empty));
 
-            await File.WriteAllLinesAsync(Constants.RosterPath, symbols);
-            await File.WriteAllLinesAsync($@"{Constants.BranchStoragePath}\{currentBranch}\roster", symbols);
+            await File.WriteAllLinesAsync(ResourceIdentifiers.RosterPath(), symbols);
+            await File.WriteAllLinesAsync($@"{ResourceIdentifiers.BranchStoragePath}\{currentBranch}\roster", symbols);
         }
     }
 }

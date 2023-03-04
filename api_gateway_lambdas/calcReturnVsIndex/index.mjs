@@ -7,22 +7,25 @@ const { POLYGON_API_KEY } = secret;
 const BENCHMARK_INDEX = 'SP';
 
 export const handler = async(event) => {
-    let { symbol, periodOffset } = event.queryStringParameters;
-    periodOffset = Number.parseInt(periodOffset, 10);
+    let { symbol, startPeriodOffset, periodCount } = event.queryStringParameters;
+    startPeriodOffset = Number.parseInt(startPeriodOffset, 10);
+    periodCount = Number.parseInt(periodCount, 10);
 
     const noSymbol = !symbol;
-    const invalidPeriodOffset = Number.isNaN(periodOffset) || periodOffset < 0;
-    if (noSymbol || invalidPeriodOffset) {
+    const invalidPeriodOffset = Number.isNaN(startPeriodOffset) || startPeriodOffset < 0;
+    const invalidperiodCount = Number.isNaN(periodCount) || periodCount < 1;
+
+    if (noSymbol || invalidPeriodOffset || invalidperiodCount) {
         const response = {
             statusCode: 400,
-            body: JSON.stringify('Bad request: Invalid `symbol`, `periodOffset` parameters')
+            body: JSON.stringify('Bad request: Invalid `symbol`, `startPeriodOffset`, `periodCount` parameters')
         };
         
         return response;
     }
 
-    const filing_date = await GetFilingDate(symbol, periodOffset);
-    const previous_filing_date = await GetFilingDate(symbol, periodOffset + 1);
+    const filing_date = await GetFilingDate(symbol, startPeriodOffset);
+    const previous_filing_date = await GetFilingDate(symbol, startPeriodOffset + periodCount);
     
     const stock_return = await ComputePeriodReturn(symbol, filing_date, previous_filing_date);
     const index_return = await ComputePeriodReturn(BENCHMARK_INDEX, filing_date, previous_filing_date);
@@ -46,7 +49,7 @@ const ComputePeriodReturn = async (symbol, filing_date, previous_filing_date) =>
     const startPrice = await SharePrice(symbol, previous_filing_date);
     const endPrice = await SharePrice(symbol, filing_date);
     
-    return 100 * (endPrice - startPrice) / startPrice;
+    return (endPrice - startPrice) / startPrice;
 };
 
 const SharePrice = async (symbol, date) => {
@@ -93,8 +96,8 @@ const GetFilingDate = async (symbol, periodOffset) => {
     return filing_date;
 };
 
-const FindMetric = async (symbol, metricNames, periodOffset) => {
-    const mostRecentFinancials = await RequestStockData(symbol, periodOffset);
+const FindMetric = async (symbol, metricNames, periodOffset, periodCount) => {
+    const mostRecentFinancials = await RequestStockData(symbol, periodOffset, periodCount);
     const { filing_date } = mostRecentFinancials;
 
     const valuesToIgnore = [null, 0, Number.Infinity];
@@ -148,7 +151,7 @@ const RequestStockData = async (symbol, periodOffset) => {
 
     const date = `${today.getFullYear()}-${monthNumber}-${dayNumber}`;
 
-    const url = `https://api.polygon.io/vX/reference/financials?ticker=${symbol}&filing_date.lte=${date}1&timeframe=quarterly&order=desc&limit=${periodOffset + 1}&sort=period_of_report_date&apiKey=${POLYGON_API_KEY}`;
+    const url = `https://api.polygon.io/vX/reference/financials?ticker=${symbol}&filing_date.lte=${date}&timeframe=quarterly&order=desc&limit=${periodOffset + 1}&sort=period_of_report_date&apiKey=${POLYGON_API_KEY}`;
     const { data } = await axios.get(url);
 
     return data.results[periodOffset];

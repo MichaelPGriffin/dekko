@@ -1,4 +1,5 @@
-﻿using dekko.Subcommands;
+﻿using Amazon.Runtime.CredentialManagement;
+using dekko.Subcommands;
 using dekko.Utilities;
 
 namespace dekko
@@ -15,8 +16,9 @@ namespace dekko
             const string branch = "branch";
             const string subset = "subset";
             const string fundamentals = "fundamentals";
+            const string relativeReturn = "relative-return";
 
-            var validCommands = new HashSet<string> { help, roster, config, fetch, islands, branch, subset, fundamentals };
+            var validCommands = new HashSet<string> { help, roster, config, fetch, islands, branch, subset, fundamentals, relativeReturn };
 
             if (args == null)
             {
@@ -66,6 +68,9 @@ namespace dekko
                     case fundamentals:
                         await Fundamentals(args);
                         break;
+                    case relativeReturn:
+                        await RelativeReturn(args);
+                        break;
                 }
             } catch(Exception ex)
             {
@@ -93,7 +98,7 @@ namespace dekko
             Console.WriteLine("What symbols are you interested in? Press ENTER to rely on `roster` file.");
             var symbolString = Console.ReadLine();
 
-            var rosterSymbols = await File.ReadAllLinesAsync(Constants.RosterPath);
+            var rosterSymbols = await File.ReadAllLinesAsync(ResourceIdentifiers.RosterPath());
 
             if (string.IsNullOrWhiteSpace(symbolString) && rosterSymbols.Length == 0)
             {
@@ -114,14 +119,14 @@ namespace dekko
                 writer.Append(symbol);
             }
 
-            File.WriteAllText($@"{Constants.RootPath}\symbols.js", writer.ToString());
+            File.WriteAllText($@"{ResourceIdentifiers.RootPath}\symbols.js", writer.ToString());
         }
 
         // TODO: Add ability to configure details for API requests, like the number of days of data.
         private static void Fetch()
         {
-            var application = Constants.BashPath;
-            var program = $@"{Constants.RootPath}\StockPriceTimeseries\run.sh";
+            var application = ResourceIdentifiers.BashPath;
+            var program = $@"{ResourceIdentifiers.RootPath}\StockPriceTimeseries\run.sh";
             var currentBranch = Subcommands.Branch.GetCurrentBranchName();
             var runner = new ScriptRunner(application, program, currentBranch);
 
@@ -136,8 +141,8 @@ namespace dekko
             }
 
             string? islandCount = args[1];
-            var application = Constants.NodePath;
-            var program = $@"{Constants.RootPath}\StockGraphAnalysis\\islands.js";
+            var application = ResourceIdentifiers.NodePath;
+            var program = $@"{ResourceIdentifiers.RootPath}\StockGraphAnalysis\\islands.js";
 
             var invalidInput = !int.TryParse(islandCount, out int _);
             if (invalidInput)
@@ -166,6 +171,11 @@ namespace dekko
         private static async Task Fundamentals(string[] args)
         {
             await new Fundamentals().Execute(args);
+        }
+
+        private static async Task RelativeReturn(string[] args)
+        {
+            await new RelativeReturn().Execute(args);
         }
     }
 }

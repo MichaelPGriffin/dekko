@@ -1,9 +1,5 @@
-﻿using dekko;
-using dekko.Utilities;
+﻿using dekko.Utilities;
 using RestSharp;
-using System;
-using System.Diagnostics.SymbolStore;
-using System.Dynamic;
 using System.Text;
 using System.Text.Json;
 
@@ -13,8 +9,12 @@ namespace dekko.Subcommands
     {
         public async Task Execute(string[] args)
         {
-            // TODO: Ensure relative return request makes sense with respect to offset param.
-            // Seems like it should be a lagging indicator.
+
+            if (args.Length == 0)
+            {
+                throw new InvalidOperationException($"The `fundamentals` command must be followed by `startPeriod` and `endPeriod` parameters");
+            }
+
             if (!int.TryParse(args[1], out int startPeriod))
             {
                 throw new InvalidOperationException($"Unexpected period offset argument {args[1]}");
@@ -30,23 +30,24 @@ namespace dekko.Subcommands
             bool hasOutputFileName = args.Length >= 4 && !string.IsNullOrEmpty(args[3]);
             if (hasOutputFileName)
             {
-                var path = $"{Constants.BranchStoragePath}\\{Branch.GetCurrentBranchName()}\\{args[3]}";
+                var path = $"{ResourceIdentifiers.BranchStoragePath}\\{Branch.GetCurrentBranchName()}\\{args[3]}";
                 Console.WriteLine($"Saving to {path}");
                 await File.WriteAllTextAsync(path, tableText);
             }
             else
             {
-                Console.WriteLine("No filename specified. Type \"yes\" to print to console?");
+                Console.WriteLine("No filename specified. Type \"y\" to print to console");
                 var input = Console.ReadLine();
-                if (input == "yes")
+                if (input == "y")
                 {
                     Console.WriteLine(tableText);
                 }
             }
         }
 
-        private const char columnDelimiter = '\t';
-        private const char lineDelimiter = '\n';
+        public const char columnDelimiter = '\t';
+        public const char lineDelimiter = '\n';
+
         public static async Task<string> RequestFundamentals(int startPeriodOffset, int endPeriodOffset = -1)
         {
             endPeriodOffset = Math.Max(startPeriodOffset, endPeriodOffset);
@@ -96,8 +97,8 @@ namespace dekko.Subcommands
 
         private static async Task<string> RequestMetric(string symbol, string metricName, int periodOffset)
         {
-            var client = await ConfigureClient();
             var request = ConfigureRequest(symbol, metricName, periodOffset);
+            var client = await ConfigureClient();
             var response = await client.ExecuteAsync(request);
 
             if (string.IsNullOrEmpty(response.Content))
@@ -115,11 +116,11 @@ namespace dekko.Subcommands
             return data.value.ToString();
         }
 
-        private static async Task<RestClient> ConfigureClient()
+        public static async Task<RestClient> ConfigureClient()
         {
             string apiKey = await SecretsManager.GetFundamentalsApiKey();
 
-            var options = new RestClientOptions(Constants.FundamentalsBaseUrl)
+            var options = new RestClientOptions(ResourceIdentifiers.FundamentalsBaseUrl)
             {
                 MaxTimeout = -1,
             };
@@ -132,11 +133,7 @@ namespace dekko.Subcommands
 
         private static RestRequest ConfigureRequest(string symbol, string metricName, int startPeriodOffset = 0, int endPeriod = 0)
         {
-            string endpoint = $"/prod/stocks/fundamentals/{metricName}";
-
-            // TODO: Conditionally append an endPeriod segment to query string if it's relevant to the metric
-            // e.g. the period over which relative return is to be calculated.
-   
+            string endpoint = $"/prod/stocks/fundamentals/{metricName}";   
             string queryString = $"symbol={symbol}&periodOffset={startPeriodOffset}";
             string fullUrl = $"{endpoint}?{queryString}";
 
@@ -145,9 +142,9 @@ namespace dekko.Subcommands
             return request;
         }
 
-        private static async Task<IEnumerable<string>> RosterSymbols()
+        public static async Task<IEnumerable<string>> RosterSymbols()
         {
-            var symbols = await File.ReadAllLinesAsync(Constants.RosterPath);
+            var symbols = await File.ReadAllLinesAsync(ResourceIdentifiers.RosterPath());
 
             return symbols;
         }
@@ -164,7 +161,7 @@ namespace dekko.Subcommands
 
         // TODO: Configure details for wiring up relative return inclusion.
         // Seems like the time-period details need to be settled first.
-        private const string ReturnVersusIndex = "return-vs-index";
+        public const string ReturnVersusIndex = "return-vs-index";
 
         private static IEnumerable<string> MetricHeaders(int startPeriodOffset, int endPeriodOffset)
         {
@@ -202,8 +199,7 @@ namespace dekko.Subcommands
             };
         }
 
-
-        internal class FundametalMetric
+        public class FundametalMetric
         {
             public decimal value { get; set; }
         }

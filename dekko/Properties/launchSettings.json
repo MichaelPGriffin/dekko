@@ -2,7 +2,7 @@
   "profiles": {
     "dekko": {
       "commandName": "Project",
-      "commandLineArgs": "fundamentals 1 2"
+      "commandLineArgs": "relative-return 1 2"
     }
   }
 }

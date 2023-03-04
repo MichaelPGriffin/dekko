@@ -20,7 +20,7 @@ namespace dekko.Subcommands
 
         private static async Task IdentifyGoldenCrossDemonstrators()
         {
-            var symbols = File.ReadAllLines(Constants.RosterPath)
+            var symbols = File.ReadAllLines(ResourceIdentifiers.RosterPath())
                 .Distinct()
                 .ToList();
 
@@ -61,12 +61,12 @@ namespace dekko.Subcommands
 
             if (percentage > 0 && percentage < 100)
             {
-                Console.WriteLine("Would you like to exclude the negatives from consideration? Type \"yes\" to confirm.)");
+                Console.WriteLine("Would you like to exclude the negatives from consideration? Type \"y\" to confirm.)");
 
                 var response = Console.ReadLine();
-                if (response == "yes")
+                if (response == "y")
                 {
-                    await File.WriteAllLinesAsync(Constants.RosterPath, symbols.Where(s => !negatives.Contains(s)));
+                    await File.WriteAllLinesAsync(ResourceIdentifiers.RosterPath(), symbols.Where(s => !negatives.Contains(s)));
                 }
             }
         }
@@ -98,7 +98,7 @@ namespace dekko.Subcommands
         private static async Task<decimal[]> GetSymbolTimeSeries(string symbol)
         {
             var currentBranch = Branch.GetCurrentBranchName();
-            var filePath = @$"{Constants.BranchStoragePath}\{currentBranch}\responses\{symbol}.csv";
+            var filePath = @$"{ResourceIdentifiers.BranchStoragePath}\{currentBranch}\responses\{symbol}.csv";
             var rawData = await File.ReadAllLinesAsync(filePath);
 
             var timeSeries = rawData
