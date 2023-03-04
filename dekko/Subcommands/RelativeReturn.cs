@@ -24,8 +24,24 @@ namespace dekko.Subcommands
                 throw new InvalidOperationException($"Unexpected period count argument {args[2]}");
             }
 
-            var result = await PrintAllApiResponses(startPeriod, periodCount);
-            Console.Write(result);
+            var tableText = await PrintAllApiResponses(startPeriod, periodCount);
+
+            bool hasOutputFileName = args.Length >= 4 && !string.IsNullOrEmpty(args[3]);
+            if (hasOutputFileName)
+            {
+                var path = $"{Constants.BranchStoragePath}\\{Branch.GetCurrentBranchName()}\\{args[3]}";
+                Console.WriteLine($"Saving to {path}");
+                await File.WriteAllTextAsync(path, tableText);
+            }
+            else
+            {
+                Console.WriteLine("No filename specified. Type \"y\" to print to console");
+                var input = Console.ReadLine();
+                if (input == "y")
+                {
+                    Console.WriteLine(tableText);
+                }
+            }
         }
 
         private static async Task<string> PrintAllApiResponses(int startPeriodOffset, int periodCount) 
