@@ -65,8 +65,8 @@
         public static async Task RemoveAsync(string symbol)
         {
             var symbols = await File.ReadAllLinesAsync(ResourceIdentifiers.RosterPath());
-            var filteredSymbols = symbols.Where(s => s != symbol);
-            await File.AppendAllLinesAsync(ResourceIdentifiers.RosterPath(), filteredSymbols);
+            var filteredSymbols = symbols.Where(s => s != symbol).Distinct();
+            await File.WriteAllLinesAsync(ResourceIdentifiers.RosterPath(), filteredSymbols);
         }
 
         public static void List()
