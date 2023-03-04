@@ -10,8 +10,10 @@
 
         public static readonly string RefsPath = $@"{RootPath}\.refs";
 
-        public static readonly string BranchStoragePath = $@"{RefsPath}\branch-contents\";
+        public static readonly string BranchStoragePath = $@"{RefsPath}\branch-contents";
 
         public static readonly string RosterPath = $@"{RefsPath}\roster";
+
+        public static readonly string FundamentalsBaseUrl = "https://usjkij2za7.execute-api.us-west-2.amazonaws.com";
     }
 }
