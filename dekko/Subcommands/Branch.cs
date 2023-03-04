@@ -4,9 +4,9 @@ namespace dekko.Subcommands
 {
     public class Branch: IExecutable
     {
-        private static readonly string CurrentBranchPath = $@"{Constants.RefsPath}\current-branch";
+        private static readonly string CurrentBranchPath = $@"{ResourceIdentifiers.RefsPath}\current-branch";
         
-        private static readonly string BranchesPath = $@"{Constants.RefsPath}\branches";
+        private static readonly string BranchesPath = $@"{ResourceIdentifiers.RefsPath}\branches";
 
         private static readonly string InitialBranchName = "initial";
 
@@ -81,8 +81,8 @@ namespace dekko.Subcommands
                 throw new ArgumentException($"A branch with name \"{newBranchName}\" already exists");
             }
 
-            var branchPersistenceScript = $@"{Constants.RootPath}\StockPriceTimeseries\persist-branch.sh {newBranchName}";
-            var scriptRunner = new ScriptRunner(Constants.BashPath, branchPersistenceScript);
+            var branchPersistenceScript = $@"{ResourceIdentifiers.RootPath}\StockPriceTimeseries\persist-branch.sh {newBranchName}";
+            var scriptRunner = new ScriptRunner(ResourceIdentifiers.BashPath, branchPersistenceScript);
             scriptRunner.Start();
 
             File.AppendAllLines(BranchesPath, new[] { newBranchName });
@@ -90,11 +90,11 @@ namespace dekko.Subcommands
             Switch(newBranchName);
 
             // Clean up initial branch now that state is persisted on other branch.
-            File.WriteAllText(Constants.RosterPath, string.Empty);
-            File.WriteAllText($@"{Constants.RootPath}\StockPriceTimeseries\data\closing-prices.tsv", string.Empty);
+            File.WriteAllText(ResourceIdentifiers.RosterPath(), string.Empty);
+            File.WriteAllText($@"{ResourceIdentifiers.RootPath}\StockPriceTimeseries\data\closing-prices.tsv", string.Empty);
 
             // Delete .csv files.
-            foreach (var file in Directory.GetFiles($@"{Constants.RootPath}\StockPriceTimeseries\responses"))
+            foreach (var file in Directory.GetFiles($@"{ResourceIdentifiers.RootPath}\StockPriceTimeseries\responses"))
             {
                 File.Delete(file);
             }
@@ -119,7 +119,7 @@ namespace dekko.Subcommands
             var branches = File.ReadAllLines(BranchesPath);
             if (branches.Contains(targetBranchName))
             {
-                Directory.Delete($@"{Constants.BranchStoragePath}\{targetBranchName}", recursive: true);
+                Directory.Delete($@"{ResourceIdentifiers.BranchStoragePath}\{targetBranchName}", recursive: true);
                 File.WriteAllLines(BranchesPath, branches.Where(branch => branch != targetBranchName));
                 Console.WriteLine($"Deleted branch {targetBranchName}");
             } else

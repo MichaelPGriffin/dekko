@@ -20,7 +20,7 @@ namespace dekko.Subcommands
 
         private static async Task IdentifyGoldenCrossDemonstrators()
         {
-            var symbols = File.ReadAllLines(Constants.RosterPath)
+            var symbols = File.ReadAllLines(ResourceIdentifiers.RosterPath())
                 .Distinct()
                 .ToList();
 
@@ -66,7 +66,7 @@ namespace dekko.Subcommands
                 var response = Console.ReadLine();
                 if (response == "y")
                 {
-                    await File.WriteAllLinesAsync(Constants.RosterPath, symbols.Where(s => !negatives.Contains(s)));
+                    await File.WriteAllLinesAsync(ResourceIdentifiers.RosterPath(), symbols.Where(s => !negatives.Contains(s)));
                 }
             }
         }
@@ -98,7 +98,7 @@ namespace dekko.Subcommands
         private static async Task<decimal[]> GetSymbolTimeSeries(string symbol)
         {
             var currentBranch = Branch.GetCurrentBranchName();
-            var filePath = @$"{Constants.BranchStoragePath}\{currentBranch}\responses\{symbol}.csv";
+            var filePath = @$"{ResourceIdentifiers.BranchStoragePath}\{currentBranch}\responses\{symbol}.csv";
             var rawData = await File.ReadAllLinesAsync(filePath);
 
             var timeSeries = rawData

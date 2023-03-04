@@ -29,7 +29,7 @@ namespace dekko.Subcommands
             bool hasOutputFileName = args.Length >= 4 && !string.IsNullOrEmpty(args[3]);
             if (hasOutputFileName)
             {
-                var path = $"{Constants.BranchStoragePath}\\{Branch.GetCurrentBranchName()}\\{args[3]}";
+                var path = $"{ResourceIdentifiers.BranchStoragePath}\\{Branch.GetCurrentBranchName()}\\{args[3]}";
                 Console.WriteLine($"Saving to {path}");
                 await File.WriteAllTextAsync(path, tableText);
             }

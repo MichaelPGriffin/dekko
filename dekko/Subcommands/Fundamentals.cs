@@ -30,7 +30,7 @@ namespace dekko.Subcommands
             bool hasOutputFileName = args.Length >= 4 && !string.IsNullOrEmpty(args[3]);
             if (hasOutputFileName)
             {
-                var path = $"{Constants.BranchStoragePath}\\{Branch.GetCurrentBranchName()}\\{args[3]}";
+                var path = $"{ResourceIdentifiers.BranchStoragePath}\\{Branch.GetCurrentBranchName()}\\{args[3]}";
                 Console.WriteLine($"Saving to {path}");
                 await File.WriteAllTextAsync(path, tableText);
             }
@@ -120,7 +120,7 @@ namespace dekko.Subcommands
         {
             string apiKey = await SecretsManager.GetFundamentalsApiKey();
 
-            var options = new RestClientOptions(Constants.FundamentalsBaseUrl)
+            var options = new RestClientOptions(ResourceIdentifiers.FundamentalsBaseUrl)
             {
                 MaxTimeout = -1,
             };
@@ -144,7 +144,7 @@ namespace dekko.Subcommands
 
         public static async Task<IEnumerable<string>> RosterSymbols()
         {
-            var symbols = await File.ReadAllLinesAsync(Constants.RosterPath);
+            var symbols = await File.ReadAllLinesAsync(ResourceIdentifiers.RosterPath());
 
             return symbols;
         }
