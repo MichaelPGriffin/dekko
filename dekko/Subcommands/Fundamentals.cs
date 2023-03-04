@@ -10,7 +10,7 @@ namespace dekko.Subcommands
         public async Task Execute(string[] args)
         {
 
-            if (args.Length == 0)
+            if (args.Length <= 1)
             {
                 throw new InvalidOperationException($"The `fundamentals` command must be followed by `startPeriod` and `endPeriod` parameters");
             }
@@ -20,7 +20,7 @@ namespace dekko.Subcommands
                 throw new InvalidOperationException($"Unexpected period offset argument {args[1]}");
             }
 
-            if (!int.TryParse(args[2], out int endPeriod))
+            if (args.Length <= 2 || !int.TryParse(args[2], out int endPeriod))
             {
                 endPeriod = -1;
             }

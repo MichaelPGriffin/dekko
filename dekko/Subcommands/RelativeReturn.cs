@@ -9,7 +9,7 @@ namespace dekko.Subcommands
     {
         public async Task Execute(string[] args)
         {
-            if (args.Length == 0)
+            if (args.Length <= 2)
             {
                 throw new InvalidOperationException($"The `relative-return` command must be followed by `startPeriod` and `periodCount` parameters");
             }
@@ -19,7 +19,7 @@ namespace dekko.Subcommands
                 throw new InvalidOperationException($"Unexpected start period argument {args[1]}");
             }
 
-            if (!int.TryParse(args[1], out int periodCount))
+            if (!int.TryParse(args[2], out int periodCount))
             {
                 throw new InvalidOperationException($"Unexpected period count argument {args[2]}");
             }
