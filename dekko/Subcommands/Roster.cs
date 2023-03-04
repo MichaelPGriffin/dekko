@@ -65,13 +65,18 @@
         public static async Task RemoveAsync(string symbol)
         {
             var symbols = await File.ReadAllLinesAsync(ResourceIdentifiers.RosterPath());
-            var filteredSymbols = symbols.Where(s => s != symbol).Distinct();
+            var filteredSymbols = symbols.Where(s => s != symbol)
+                .Distinct()
+                .OrderBy(s => s);
+
             await File.WriteAllLinesAsync(ResourceIdentifiers.RosterPath(), filteredSymbols);
         }
 
         public static void List()
         {
-            var symbols = File.ReadAllLines(ResourceIdentifiers.RosterPath());
+            var symbols = File
+                .ReadAllLines(ResourceIdentifiers.RosterPath())
+                .OrderBy(s => s);
 
             foreach(var symbol in symbols)
             {
