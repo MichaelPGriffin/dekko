@@ -69,14 +69,20 @@ namespace dekko.Subcommands
                 throw new InvalidOperationException("Unexpected API response.");
             }
 
-            var data = JsonSerializer.Deserialize<FundametalMetric>(response.Content);
-
-            if (data == null)
+            FundametalMetric? data;
+            try
             {
-                throw new InvalidOperationException($"Inspect request for {ReturnVersusIndex} with {symbol}");
+                data = JsonSerializer.Deserialize<FundametalMetric>(response.Content);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Inspect request for {ReturnVersusIndex} with {symbol}");
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("Inserting `decimal.MinValue` as a placeholder");
+                data = new FundametalMetric { value = int.MinValue };
             }
 
-            var metricValue = data.value.ToString();
+            var metricValue = data!.value.ToString();
 
             return metricValue;
         }

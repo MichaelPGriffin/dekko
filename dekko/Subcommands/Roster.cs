@@ -53,13 +53,22 @@
                 File.Create(ResourceIdentifiers.RosterPath());
                 symbols = await File.ReadAllLinesAsync(ResourceIdentifiers.RosterPath());
             }
-
+            
             if (symbols.Contains(symbol))
             {
                 return;
             }
 
-            await File.AppendAllTextAsync(ResourceIdentifiers.RosterPath(), $"{symbol.ToUpperInvariant()}\n");
+            symbols = symbols.Append(symbol).ToArray();
+
+            symbols = symbols
+                .Select(s => s.ToUpperInvariant())
+                .OrderBy(s => s)
+                .ToArray();
+
+            var path = ResourceIdentifiers.RosterPath();
+            Console.WriteLine(path);
+            await File.WriteAllLinesAsync(ResourceIdentifiers.RosterPath(), symbols);
         }
 
         public static async Task RemoveAsync(string symbol)

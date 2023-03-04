@@ -2,7 +2,7 @@
   "profiles": {
     "dekko": {
       "commandName": "Project",
-      "commandLineArgs": "fundamentals 1"
+      "commandLineArgs": "roster add AAPL"
     }
   }
 }

@@ -105,15 +105,21 @@ namespace dekko.Subcommands
             {
                 throw new InvalidOperationException("Unexpected API response.");
             }
-
-            var data = JsonSerializer.Deserialize<FundametalMetric>(response.Content);
-
-            if (data == null)
+            
+            FundametalMetric? data;
+            try
             {
-                throw new InvalidOperationException($"Inspect request for {metricName} with {symbol}");
+                data = JsonSerializer.Deserialize<FundametalMetric>(response.Content);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Inspect request for {metricName} with {symbol}");
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("Inserting `decimal.MinValue` as a placeholder");
+                data = new FundametalMetric { value = int.MinValue };
             }
 
-            return data.value.ToString();
+            return data!.value.ToString();
         }
 
         public static async Task<RestClient> ConfigureClient()
