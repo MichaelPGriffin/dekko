@@ -36,9 +36,9 @@ namespace dekko.Subcommands
             }
             else
             {
-                Console.WriteLine("No filename specified. Type \"yes\" to print to console?");
+                Console.WriteLine("No filename specified. Type \"y\" to print to console");
                 var input = Console.ReadLine();
-                if (input == "yes")
+                if (input == "y")
                 {
                     Console.WriteLine(tableText);
                 }
