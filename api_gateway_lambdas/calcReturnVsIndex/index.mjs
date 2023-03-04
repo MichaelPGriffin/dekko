@@ -7,25 +7,25 @@ const { POLYGON_API_KEY } = secret;
 const BENCHMARK_INDEX = 'SP';
 
 export const handler = async(event) => {
-    let { symbol, periodOffset, periodCount } = event.queryStringParameters;
-    periodOffset = Number.parseInt(periodOffset, 10);
+    let { symbol, startPeriodOffset, periodCount } = event.queryStringParameters;
+    startPeriodOffset = Number.parseInt(startPeriodOffset, 10);
     periodCount = Number.parseInt(periodCount, 10);
 
     const noSymbol = !symbol;
-    const invalidPeriodOffset = Number.isNaN(periodOffset) || periodOffset < 0;
+    const invalidPeriodOffset = Number.isNaN(startPeriodOffset) || startPeriodOffset < 0;
     const invalidperiodCount = Number.isNaN(periodCount) || periodCount < 1;
 
     if (noSymbol || invalidPeriodOffset || invalidperiodCount) {
         const response = {
             statusCode: 400,
-            body: JSON.stringify('Bad request: Invalid `symbol`, `periodOffset`, `periodCount` parameters')
+            body: JSON.stringify('Bad request: Invalid `symbol`, `startPeriodOffset`, `periodCount` parameters')
         };
         
         return response;
     }
 
-    const filing_date = await GetFilingDate(symbol, periodOffset);
-    const previous_filing_date = await GetFilingDate(symbol, periodOffset + periodCount);
+    const filing_date = await GetFilingDate(symbol, startPeriodOffset);
+    const previous_filing_date = await GetFilingDate(symbol, startPeriodOffset + periodCount);
     
     const stock_return = await ComputePeriodReturn(symbol, filing_date, previous_filing_date);
     const index_return = await ComputePeriodReturn(BENCHMARK_INDEX, filing_date, previous_filing_date);
