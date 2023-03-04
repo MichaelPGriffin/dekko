@@ -7,25 +7,25 @@ const { POLYGON_API_KEY } = secret;
 const BENCHMARK_INDEX = 'SP';
 
 export const handler = async(event) => {
-    let { symbol, periodOffset, periodLength } = event.queryStringParameters;
+    let { symbol, periodOffset, periodCount } = event.queryStringParameters;
     periodOffset = Number.parseInt(periodOffset, 10);
-    periodLength = Number.parseInt(periodLength, 10);
+    periodCount = Number.parseInt(periodCount, 10);
 
     const noSymbol = !symbol;
     const invalidPeriodOffset = Number.isNaN(periodOffset) || periodOffset < 0;
-    const invalidPeriodLength = Number.isNaN(periodLength) || periodLength < 1;
+    const invalidperiodCount = Number.isNaN(periodCount) || periodCount < 1;
 
-    if (noSymbol || invalidPeriodOffset || invalidPeriodLength) {
+    if (noSymbol || invalidPeriodOffset || invalidperiodCount) {
         const response = {
             statusCode: 400,
-            body: JSON.stringify('Bad request: Invalid `symbol`, `periodOffset`, `periodLength` parameters')
+            body: JSON.stringify('Bad request: Invalid `symbol`, `periodOffset`, `periodCount` parameters')
         };
         
         return response;
     }
 
     const filing_date = await GetFilingDate(symbol, periodOffset);
-    const previous_filing_date = await GetFilingDate(symbol, periodOffset + periodLength);
+    const previous_filing_date = await GetFilingDate(symbol, periodOffset + periodCount);
     
     const stock_return = await ComputePeriodReturn(symbol, filing_date, previous_filing_date);
     const index_return = await ComputePeriodReturn(BENCHMARK_INDEX, filing_date, previous_filing_date);
@@ -96,8 +96,8 @@ const GetFilingDate = async (symbol, periodOffset) => {
     return filing_date;
 };
 
-const FindMetric = async (symbol, metricNames, periodOffset, periodLength) => {
-    const mostRecentFinancials = await RequestStockData(symbol, periodOffset, periodLength);
+const FindMetric = async (symbol, metricNames, periodOffset, periodCount) => {
+    const mostRecentFinancials = await RequestStockData(symbol, periodOffset, periodCount);
     const { filing_date } = mostRecentFinancials;
 
     const valuesToIgnore = [null, 0, Number.Infinity];
