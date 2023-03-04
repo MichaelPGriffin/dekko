@@ -12,7 +12,7 @@ namespace dekko.Subcommands
     public class Fundamentals : IExecutable
     {
         public async Task Execute(string[] args)
-        {.
+        {
             // TODO: Ensure relative return request makes sense with respect to offset param.
             // Seems like it should be a lagging indicator.
             if (!int.TryParse(args[1], out int startPeriod))
@@ -25,12 +25,29 @@ namespace dekko.Subcommands
                 endPeriod = -1;
             }
 
-            await RequestFundamentals(startPeriod, endPeriod);
+            var tableText = await RequestFundamentals(startPeriod, endPeriod);
+
+            bool hasOutputFileName = args.Length >= 4 && !string.IsNullOrEmpty(args[3]);
+            if (hasOutputFileName)
+            {
+                var path = $"{Constants.BranchStoragePath}\\{Branch.GetCurrentBranchName()}\\{args[3]}";
+                Console.WriteLine($"Saving to {path}");
+                await File.WriteAllTextAsync(path, tableText);
+            }
+            else
+            {
+                Console.WriteLine("No filename specified. Type \"yes\" to print to console?");
+                var input = Console.ReadLine();
+                if (input == "yes")
+                {
+                    Console.WriteLine(tableText);
+                }
+            }
         }
 
         private const char columnDelimiter = '\t';
         private const char lineDelimiter = '\n';
-        public static async Task RequestFundamentals(int startPeriodOffset, int endPeriodOffset = -1)
+        public static async Task<string> RequestFundamentals(int startPeriodOffset, int endPeriodOffset = -1)
         {
             endPeriodOffset = Math.Max(startPeriodOffset, endPeriodOffset);
 
@@ -51,7 +68,7 @@ namespace dekko.Subcommands
                 table.Append(lineDelimiter);
             }
 
-            Console.Write(table.ToString());
+            return table.ToString();
         }
 
         private static async Task<string> GetMetricsForSymbol(string symbol, int startPeriod, int endPeriod)
@@ -156,7 +173,8 @@ namespace dekko.Subcommands
 
             for (int period = startPeriodOffset; period <= endPeriodOffset; period++)
             {
-                var timePeriodColumns = metricNames.Select(name => $"{name}_{period}");
+                var timePeriodColumns = metricNames.Select(name => $"{name.Replace('-', '_')}_{period}");
+
                 foreach(var column in timePeriodColumns)
                 {
                     headers.Add(column);

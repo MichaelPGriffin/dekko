@@ -10,7 +10,7 @@
 
         public static readonly string RefsPath = $@"{RootPath}\.refs";
 
-        public static readonly string BranchStoragePath = $@"{RefsPath}\branch-contents\";
+        public static readonly string BranchStoragePath = $@"{RefsPath}\branch-contents";
 
         public static readonly string RosterPath = $@"{RefsPath}\roster";
 
