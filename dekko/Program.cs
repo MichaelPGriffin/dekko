@@ -1,4 +1,5 @@
-﻿using dekko.Subcommands;
+﻿using Amazon.Runtime.CredentialManagement;
+using dekko.Subcommands;
 using dekko.Utilities;
 
 namespace dekko
@@ -15,8 +16,9 @@ namespace dekko
             const string branch = "branch";
             const string subset = "subset";
             const string fundamentals = "fundamentals";
+            const string relativeReturn = "relative-return";
 
-            var validCommands = new HashSet<string> { help, roster, config, fetch, islands, branch, subset, fundamentals };
+            var validCommands = new HashSet<string> { help, roster, config, fetch, islands, branch, subset, fundamentals, relativeReturn };
 
             if (args == null)
             {
@@ -65,6 +67,9 @@ namespace dekko
                         break;
                     case fundamentals:
                         await Fundamentals(args);
+                        break;
+                    case relativeReturn:
+                        await RelativeReturn(args);
                         break;
                 }
             } catch(Exception ex)
@@ -166,6 +171,11 @@ namespace dekko
         private static async Task Fundamentals(string[] args)
         {
             await new Fundamentals().Execute(args);
+        }
+
+        private static async Task RelativeReturn(string[] args)
+        {
+            await new RelativeReturn().Execute(args);
         }
     }
 }
