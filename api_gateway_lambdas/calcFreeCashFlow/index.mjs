@@ -90,7 +90,7 @@ const RequestStockData = async (symbol, periodOffset) => {
 
     const date = `${today.getFullYear()}-${monthNumber}-${dayNumber}`;
     
-    const url = `https://api.polygon.io/vX/reference/financials?ticker=${symbol}&filing_date.lte=${date}1&timeframe=quarterly&order=desc&limit=${periodOffset + 1}&sort=period_of_report_date&apiKey=${POLYGON_API_KEY}`;
+    const url = `https://api.polygon.io/vX/reference/financials?ticker=${symbol}&filing_date.lte=${date}&timeframe=quarterly&order=desc&limit=${periodOffset + 1}&sort=period_of_report_date&apiKey=${POLYGON_API_KEY}`;
     const { data } = await axios.get(url);
 
     return data.results[periodOffset];
