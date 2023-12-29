@@ -10,4 +10,3 @@ Example use case:
 _As an investor, you're contemplating a collection of N stocks. You want to eliminate the most highly-correlated assets until only M remain. And of these, you may want to consider the subset with closing prices between $15 and $20. From there, you many want to add or remove specific stocks on an ad-hoc basis, and calculate time-series statistics._
 
 Dekko makes this type of analysis easy and reproducible.
-```
