@@ -1,4 +1,4 @@
-`Dekko` is `git` for investment portfolios.
+Dekko is git for investment portfolios.
 
 It provides a collection of graph algorithms and statistical tools that make it easier to understand how a group of assets collectively behaves.
 
